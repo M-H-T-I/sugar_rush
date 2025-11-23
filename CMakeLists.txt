@@ -22,4 +22,4 @@ target_sources(main
         src/main.cpp
 )
 
-target_link_libraries(main SFML::Graphics SFML::Window)
+target_link_libraries(main SFML::Graphics SFML::Window SFML::Audio)
