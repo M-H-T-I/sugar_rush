@@ -1,17 +1,17 @@
 #include "common.hpp"
 
-int main()
-{
+
+int main(){
 
     sf::Music music;
 
-    
+   
 
-    // test to see if sfml is working
-    sf::Window window(sf::VideoMode({800, 600}), "Sugar Rush", sf::Style::Default);
-    window.setFramerateLimit(60);
+    // main window
+    sf::RenderWindow window(sf::VideoMode({800, 600}), "Sugar Rush", sf::Style::Default);
 
-   if(!music.openFromFile("assets/sound/CandyCrushMusic.mp3")){
+    // music
+    if(!music.openFromFile("assets/sound/CandyCrushMusic.mp3")){
         cout << "COuld not open audio file" << endl;
         return -1;
     }else {

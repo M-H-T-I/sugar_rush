@@ -8,6 +8,5 @@
 
 using namespace std;
 
-void handleInput();
 
 #endif
