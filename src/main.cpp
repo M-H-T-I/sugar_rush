@@ -1,11 +1,15 @@
 #include "common.hpp"
+#include "TitleScreen.hpp"
 
 
 int main(){
 
-    sf::Music music;
+    // loading everything
+    if(!loadAssets()) return -1;
 
-   
+    int index = 0;
+
+    sf::Music music;
 
     // main window
     sf::RenderWindow window(sf::VideoMode({800, 600}), "Sugar Rush", sf::Style::Default);
@@ -29,6 +33,12 @@ int main(){
             // "close requested" event: we close the window
             if (event->is<sf::Event::Closed>()){
                 window.close();
+            }
+
+            cout << "State is: " << states[index] << endl;
+            //checking state
+            if(index == 0){
+                drawTitleScreen(window);
             }
 
             window.display();

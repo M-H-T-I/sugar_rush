@@ -20,6 +20,9 @@ add_executable(main)
 target_sources(main
     PRIVATE
         src/main.cpp
+        src/TitleScreen.cpp
+        src/common.cpp
+        
 )
 
 target_link_libraries(main SFML::Graphics SFML::Window SFML::Audio)
