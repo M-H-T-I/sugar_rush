@@ -15,7 +15,6 @@ extern sf::Font globalFont;
 extern sf::Texture backgroundImageTexture; 
 
 bool loadFont();
-
 bool loadAssets();
 
 #endif

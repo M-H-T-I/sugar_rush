@@ -15,7 +15,7 @@ int main(){
     sf::RenderWindow window(sf::VideoMode({800, 600}), "Sugar Rush", sf::Style::Default);
 
     // music
-    if(!music.openFromFile("assets/sound/CandyCrushMusic.mp3")){
+    if(!music.openFromFile("assets/sound/CandyCrushMusic.mp3") && window.isOpen()){
         cout << "COuld not open audio file" << endl;
         return -1;
     }else {
@@ -35,7 +35,14 @@ int main(){
                 window.close();
             }
 
-            cout << "State is: " << states[index] << endl;
+            if (const auto* resized = event->getIf<sf::Event::Resized>()){
+
+                // fixing the viewport
+                sf::FloatRect visibleArea({0.f, 0.f}, sf::Vector2f(resized->size));
+                window.setView(sf::View(visibleArea));
+
+            }
+
             //checking state
             if(index == 0){
                 drawTitleScreen(window);
