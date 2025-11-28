@@ -35,6 +35,18 @@ int main(){
                 window.close();
             }
 
+            if(const auto* clicked = event->getIf<sf::Event::MouseButtonPressed>()){
+
+                if(clicked->button == sf::Mouse::Button::Left){
+
+                    // check which state the game is in
+                    titleScreenInputHandling(window, index);
+
+                }
+
+            }
+
+            // changing view
             if (const auto* resized = event->getIf<sf::Event::Resized>()){
 
                 // fixing the viewport
