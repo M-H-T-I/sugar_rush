@@ -40,7 +40,12 @@ int main(){
                 if(clicked->button == sf::Mouse::Button::Left){
 
                     // check which state the game is in
-                    titleScreenInputHandling(window, index);
+                    if(index == 0){
+                        titleScreenInputHandling(window, index);
+
+                    }else if(index == 1){
+                        lvlSelectorScreenInputHandling(window, index);
+                    }
 
                 }
 
