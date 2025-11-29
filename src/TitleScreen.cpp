@@ -10,8 +10,8 @@ void drawTitleScreen(sf::RenderWindow& window){
 
     const float margin = 50.f;
     float prev = 100.f;
+
     // title text
-    
     titleText.setString("Sugar Rush");
     titleText.setCharacterSize(60);
     titleText.setFillColor(sf::Color(191, 78, 48)); 
@@ -80,11 +80,11 @@ void titleScreenInputHandling(sf::RenderWindow& window, int& index){
     // converting to account for screen changes
     sf::Vector2f mousePos = window.mapPixelToCoords(temp);
 
-    if(titleText.getGlobalBounds().contains(mousePos)){
+    if(playText.getGlobalBounds().contains(mousePos)){
         index = 1;
     }else if(settingsText.getGlobalBounds().contains(mousePos)){
         index = 6;
-    }else if(settingsText.getGlobalBounds().contains(mousePos)){
+    }else if(newUserText.getGlobalBounds().contains(mousePos)){
         index = 1; // still maps to level screen for now
     }
 

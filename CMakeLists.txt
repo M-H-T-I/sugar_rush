@@ -22,6 +22,7 @@ target_sources(main
         src/main.cpp
         src/TitleScreen.cpp
         src/common.cpp
+        src/LvlSelector.cpp
         
 )
 

@@ -1,5 +1,6 @@
 #include "common.hpp"
 #include "TitleScreen.hpp"
+#include "LvlSelector.hpp"
 
 int main(){
 
@@ -57,6 +58,8 @@ int main(){
             //checking state
             if(index == 0){
                 drawTitleScreen(window);
+            }else if(index == 1){
+                drawLvlSelectorScreen(window);
             }
 
             window.display();
