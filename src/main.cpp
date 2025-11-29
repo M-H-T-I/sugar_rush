@@ -1,10 +1,9 @@
 #include "common.hpp"
 #include "TitleScreen.hpp"
 
-
 int main(){
 
-    // loading everything
+    // initiaizing everything
     if(!loadAssets()) return -1;
 
     int index = 0;

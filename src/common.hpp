@@ -13,6 +13,8 @@ extern string states[7];
 
 extern sf::Font globalFont;
 extern sf::Texture backgroundImageTexture; 
+extern bool userLevels[4];
+
 
 bool loadFont();
 bool loadAssets();
