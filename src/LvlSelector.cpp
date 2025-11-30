@@ -1,4 +1,5 @@
 #include "LvlSelector.hpp"
+#include "Lvl1.hpp"
 
 sf::Text titleTextLvlSelector(globalFont);
 sf::Text tutorialBtn(globalFont);

@@ -38,8 +38,7 @@ bool deleteUser(){
         cout << "File could not be found." << endl;
         return false;
 
-    }
-    
+    }    
 
 }
 

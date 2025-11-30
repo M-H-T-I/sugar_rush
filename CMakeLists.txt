@@ -23,7 +23,8 @@ target_sources(main
         src/TitleScreen.cpp
         src/common.cpp
         src/LvlSelector.cpp
-        
+        src/GridUtils.cpp
+        src/Lvl1.cpp
 )
 
 target_link_libraries(main SFML::Graphics SFML::Window SFML::Audio)

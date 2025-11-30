@@ -1,11 +1,14 @@
 #include "common.hpp"
 #include "TitleScreen.hpp"
 #include "LvlSelector.hpp"
+#include "Lvl1.hpp"
 
 int main(){
 
     // initiaizing everything
     if(!loadAssets()) return -1;
+    initRandom(); // initializing seed
+    initLevel1();
 
     int index = 0;
 
@@ -45,6 +48,8 @@ int main(){
 
                     }else if(index == 1){
                         lvlSelectorScreenInputHandling(window, index);
+                    }else if(index == 2){
+                        Lvl1ScreenInputHandling(window, index);
                     }
 
                 }
@@ -60,16 +65,21 @@ int main(){
 
             }
 
+        }   
+
+            window.clear(sf::Color(60, 176, 205));
+
             //checking state
             if(index == 0){
                 drawTitleScreen(window);
             }else if(index == 1){
                 drawLvlSelectorScreen(window);
+            }else if(index == 2){
+                drawLvl1Screen(window);
             }
 
             window.display();
 
-        }
     }
 
 }
