@@ -10,12 +10,12 @@ int matchType = 0;
 
 int moves = 20, score = 0, requiredScore = 2500, margin = 50; 
 
-sf::Texture temporaryTexture; // will initialize later
+
 
 sf::Text backBtnLvl1(globalFont);
 sf::Text movesText(globalFont);
 sf::Text scoreText(globalFont);
-sf::Sprite gridElement(temporaryTexture);
+sf::Sprite gridElement(textureArray[8]);
 
 
 
@@ -246,11 +246,13 @@ void initSprites(){
 // called before mainloop is initialized
 bool initLevel1(){
 
+    cout << " initialzied level 1" << endl;
     bool valid = true;
 
     initGrid(grid, 8);
+    cout << grid[0][1] << endl;
     initSprites();
-
+    cout << "initialized sprites for level 1" << endl;
     return valid;
 }
 
@@ -258,7 +260,6 @@ bool initLevel1(){
 sf::RenderTexture createGridTexture(int grid[8][8]){
 
     sf::RenderTexture gridRT({length, width}); // the texture
-    gridRT.clear();
 
     // using the grid array
     for (int i = 0; i < rows; i++){
@@ -311,13 +312,17 @@ sf::RenderTexture createGridTexture(int grid[8][8]){
 
             };
             
-            spriteGrid[i][j]->setTexture(textureArray[textureNum]);
-            spriteGrid[i][j]->setScale({(cellSize / textureArray[textureNum].getSize().x), (cellSize / textureArray[textureNum].getSize().y)});
+            // spriteGrid[i][j]->setTexture(textureArray[textureNum]);
+            // spriteGrid[i][j]->setScale({(cellSize / textureArray[textureNum].getSize().x), (cellSize / textureArray[textureNum].getSize().y)});
+            // sf::Vector2f pos {(j*cellSize), (i*cellSize)}; // position vector for the new cell
+            // spriteGrid[i][j]->setPosition(pos);
+
+            sf::Sprite temp(textureArray[textureNum]);
+            temp.setScale({(cellSize / textureArray[textureNum].getSize().x), (cellSize / textureArray[textureNum].getSize().y)});
             sf::Vector2f pos {(j*cellSize), (i*cellSize)}; // position vector for the new cell
-            spriteGrid[i][j]->setPosition(pos);
-
-
-            gridRT.draw(*spriteGrid[i][j]);
+            temp.setPosition(pos);
+            *spriteGrid[i][j] = temp;
+            gridRT.draw(temp);
 
         }
 
@@ -347,13 +352,14 @@ void drawLvl1Screen(sf::RenderWindow& window){
     prev += title.getLocalBounds().size.y + margin;
 
     sf::RenderTexture gridRT = createGridTexture(grid);
-
+    gridRT.display();
     // drawing the grid
-    gridElement.setTexture(gridRT.getTexture());
+    
+    gridElement = sf::Sprite(gridRT.getTexture());
 
     center = gridElement.getLocalBounds().size / 2.f;
     gridElement.setOrigin(center);
-    gridElement.setPosition({(window.getSize().x / 2.f), (center.y + margin + prev + 50)});
+    gridElement.setPosition({(window.getSize().x / 2.f), (prev + margin + center.y)});
 
     prev = margin;
 
@@ -392,12 +398,15 @@ void drawLvl1Screen(sf::RenderWindow& window){
     scoreText.setOrigin(center);
 
     scoreText.setPosition(sf::Vector2f{50.f , prev});
+    sf::Sprite checkCandy = sf::Sprite(gridRT.getTexture());
+    checkCandy.setPosition(sf::Vector2f(100.f, 200.f));
 
     window.draw(title);
-    window.draw(gridElement);
     window.draw(backBtnLvl1);
     window.draw(movesText);
     window.draw(scoreText);
+    window.draw(gridElement);
+    // window.draw(checkCandy);
 
 }
 
