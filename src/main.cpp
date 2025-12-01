@@ -6,26 +6,17 @@
 int main(){
 
     // initiaizing everything
-    if(!loadAssets()) return -1;
+    if(!loadAssets() && !loadSound()) return -1;
     initRandom(); // initializing seed
     initLevel1();
 
     int index = 0;
 
-    sf::Music music;
 
     // main window
     sf::RenderWindow window(sf::VideoMode({800, 600}), "Sugar Rush", sf::Style::Default);
 
-    // music
-    if(!music.openFromFile("assets/sound/CandyCrushMusic.mp3") && window.isOpen()){
-        cout << "COuld not open audio file" << endl;
-        return -1;
-    }else {
-        music.setLooping(true);
-        music.setVolume(20.f);
-        music.play();
-    }
+   
 
     // run the program as long as the window is open
     while (window.isOpen())

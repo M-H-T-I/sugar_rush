@@ -3,7 +3,7 @@
 
 sf::Texture backgroundImageTexture;
 sf::Font globalFont;
-
+sf::Music bombSound, music;
 sf::Texture textureArray[9];
 
 string states[7] = {"title", "levelSelector", "lvl1", "lvl2", "lvl3", "tutorial", "settings"};
@@ -13,6 +13,23 @@ bool loadFont(){
     if(!globalFont.openFromFile("assets/fonts/Jaro-Regular.ttf")){
         cerr << "Error: could not load global font jaro-regular from file" << endl;
         return false;
+    }
+
+    return true;
+}
+
+bool loadSound(){
+
+
+    
+    if(!music.openFromFile("assets/sound/CandyCrushMusic.mp3") && !(bombSound.openFromFile("assets/sound/boom.ogg"))){
+        cout << "COuld not open audio file" << endl;
+        return false;
+    }else {
+        music.setLooping(true);
+        bombSound.setVolume(15.f);
+        music.setVolume(20.f);
+        music.play();
     }
 
     return true;
@@ -31,6 +48,14 @@ bool initTextures(){
     if(!textureArray[6].loadFromFile("assets/images/SpecialCandy4.png")) valid = false;
     if(!textureArray[7].loadFromFile("assets/images/SpecialCandy5.png")) valid = false;
     if(!textureArray[8].loadFromFile("assets/images/empty.jpg")) valid = false;
+
+
+    for(int i= 0; i < 9;i++){
+
+        textureArray[i].setSmooth(true);
+
+    }
+
 
     return valid;
 

@@ -1,15 +1,15 @@
 #include "common.hpp"
-#include "GridUtils.hpp"
-
+#include "Lvl1.hpp"
 
 // ----------------------------- NECESSARY DATA ----------------------------
 
 bool selected = false;
 int selectedCell[] = {-1, -1}; // unselected state is -1, -1
 int matchType = 0;
+bool isActive = false;
+int moves = 20, score = 2450, requiredScore = 2500, margin = 50; 
 
-int moves = 20, score = 0, requiredScore = 2500, margin = 50; 
-
+bool mousePressedLastFrame = false;
 
 
 sf::Text backBtnLvl1(globalFont);
@@ -26,217 +26,95 @@ int grid[8][8];
 sf::Sprite* spriteGrid[8][8]; // will save all the sprites so I dont have to do any calculations
 
 
-int cols = 8, rows = 8;
-uint length = 400, width = 400;
-float cellSize = length / cols;
 
 
+// ------------------ Functions---------------------------- 
 
-// ------------------ Functions
+void swapWithAnimation(int grid[][8], int coord1[], int coord2[], sf::RenderWindow& window){
+    
+    // Redraw swapped grid
+    createGridTexture(grid);
+    window.clear();
+    drawLvl1Screen(window); // your draw function
+    window.display();
+
+    // If move invalid, wait 0.5s and swap back
+    if(!isMoveValid(grid)){
+        sf::sleep(sf::seconds(0.5f));
+
+        swapCells(coord1, coord2, grid);
+
+        createGridTexture(grid);
+        window.clear();
+        drawLvl1Screen(window);
+        window.display();
+    }
+}
+
+bool isWon(sf::RenderWindow& window){
+
+    sf::Text txt(globalFont);
+    txt.setCharacterSize(64);               // adjust as needed
+    txt.setStyle(sf::Text::Bold);
+    txt.setFillColor(sf::Color::White);
+
+    // Measure text and compute box size with padding
+    sf::FloatRect tb = txt.getLocalBounds(); // left/top may be non-zero
+    float paddingX = 40.f;
+    float paddingY = 24.f;
+    sf::Vector2f boxSize(tb.size.x + paddingX * 2.f, tb.size.y + paddingY * 2.f);
+
+    // Center of the window
+    sf::Vector2u winSize = window.getSize();
+    sf::Vector2f center((float)winSize.x / 2.f, (float)winSize.y / 2.f);
+
+    // Create the box
+    sf::RectangleShape box(boxSize);
+    box.setOrigin({boxSize.x / 2.f, boxSize.y / 2.f});
+    box.setPosition(center);
+    box.setFillColor(sf::Color(0, 0, 0, 180));      // semi-transparent black
+    box.setOutlineColor(sf::Color(240, 200, 30));   // gold outline
+    box.setOutlineThickness(4.f);
+
+    // Position text centered inside the box (account for text local bounds)
+    txt.setOrigin({(tb.position.x + tb.size.x / 2.f), (tb.position.y + tb.size.y / 2.f)});
+    txt.setPosition(center);
 
 
+    if(requiredScore <= score){
+        txt.setString("You win");
+        window.draw(box);
+        window.draw(txt);
+        return true;
+    }else{
+        txt.setString("You lose");
+        window.draw(box);
+        window.draw(txt);
+        return false;
+    }
 
-
-void swapCells(int coord1[], int coord2[]){
-
-    int temp = grid[coord1[0]][coord1[1]];
-    grid[coord1[0]][coord1[1]] = grid[coord2[0]][coord2[1]];
-    grid[coord2[0]][coord2[1]] = temp;
+    
+   
 
 }
 
 
-bool horizontalCheck(int row, int col, int matchCoords[]){
-
-    bool endRun = false;
-
-    int start = col, c = start;
-
-    while(!endRun){
-        
-        c++;
-        endRun = (c == cols) || (grid[row][c] != grid[row][start]);
-
-    }
-
-    if (endRun && c < cols){
-
-        matchCoords[0] = start;
-        matchCoords[1] = c;
-
-        return true; 
-
-    }else {
-
-        return false; // no match found 
-    }
-
-
-}
-
-
-void replaceMatchedRow(int row, int colCoords[]){
-
-    int matchType = 0, length = colCoords[1]-colCoords[0];
-
-    switch (length)
-    {
-    
-    //replace with empty cell
-    case 3:
-
-        matchType = 1;
-        grid[row][colCoords[0]] = 8;
-        break;
-    
-    // replace with 2x2 candy
-    case 4:
-
-        matchType = 2;
-        grid[row][colCoords[0]] = 6;
-        break;
-    
-    // replace with row removing candy
-    default:
-
-        matchType = 3;
-        grid[row][colCoords[0]] = 7;
-        break;
-
-    }
-
-    
-
-    // replace each grid value to that of an empty cell
-    for(int c = colCoords[0] + 1; c <= colCoords[1]; c++){
-        
-        grid[row][c] = 8;
-
-    }
-
-}
-
-
-// returns true when the first matched is found and replaces it with fresh cells
-bool handleAndCheckMatched(){
-
-
-    int coords[] = {-1, -1}; // used to store the coords of the row to replace 
-
-    bool matched = false, endRun = false;
-    int length;
-
-    for(int r = 0; r < rows; r++){
-
-        for (int c = 0; c < cols; c++){
-
-            if(horizontalCheck(r, c, coords)){
-
-                if ((coords[1] - coords[0]) >= 3){
-                    
-                    replaceMatchedRow(r,coords);
-                    return true;
-                }
-
-            }
-
+bool isInGrid(sf::Vector2f mousePos) {
+    for (int r = 0; r < ROWS; r++) {
+        for (int c = 0; c < COLS; c++) {
+            if (spriteGrid[r][c]->getGlobalBounds().contains(mousePos))
+                return true;
         }
-
     }
-
     return false;
 }
 
 
-// tells whether or not move made was valid 
-bool validateMove(){
-
-    bool valid = false;
-    // continue running until no matches found
-    while(bool run = handleAndCheckMatched()){
-
-        valid = true;
-
-    }
-
-    return valid;
-}
-
-
-void makeMove(int cell[], int selectedCell[]){
-
-    //swapping
-    swapCells(cell, selectedCell);
-    
-    if(!validateMove()){
-
-        // return to previous state
-        swapCells(cell, selectedCell);
-
-    }else {
-
-        moves--;
-        //render screen
-        score++;
-
-    }
-
-
-}
-
-
-bool isInGrid(sf::Vector2f mousePos){
-
-    return gridElement.getGlobalBounds().contains(mousePos);
-
-}
-
-
-
-void inputHandleGrid(sf::Vector2f mousePos){
-
-    for (int i = 0; i < rows; i++){
-
-        for (int j = 0; j < cols; j++){
-
-            if(spriteGrid[i][j]->getGlobalBounds().contains(mousePos)){
-
-                // if first move select the cell
-                if (!selected){
-
-                    selected = true;
-                    selectedCell[0] = i; // row
-                    selectedCell[1] = j; // col
-
-                }else {
-
-                    int cell[] = {i, j};
-
-                    makeMove(cell, selectedCell);
-
-                    // returning to default state
-                    selected = false;
-                    selectedCell[0] = -1; // row
-                    selectedCell[1] = -1; // col
-
-                }
-                
-
-            }
-
-        }   
-
-    }
-
-}
-
-
-
 void initSprites(){
 
-    for (int row = 0; row < rows; row++){
+    for (int row = 0; row < ROWS; row++){
 
-        for (int c = 0; c < cols; c++){
+        for (int c = 0; c < COLS; c++){
             spriteGrid[row][c] = new sf::Sprite(textureArray[8]);
         }
     }
@@ -246,13 +124,16 @@ void initSprites(){
 // called before mainloop is initialized
 bool initLevel1(){
 
-    cout << " initialzied level 1" << endl;
     bool valid = true;
 
     initGrid(grid, 8);
-    cout << grid[0][1] << endl;
     initSprites();
+    prepareGrid(grid, ROWS, COLS, isActive, score);
+
+    isActive = true;
+
     cout << "initialized sprites for level 1" << endl;
+
     return valid;
 }
 
@@ -260,11 +141,12 @@ bool initLevel1(){
 sf::RenderTexture createGridTexture(int grid[8][8]){
 
     sf::RenderTexture gridRT({length, width}); // the texture
+    gridRT.clear(sf::Color::White);
 
     // using the grid array
-    for (int i = 0; i < rows; i++){
+    for (int i = 0; i < ROWS; i++){
 
-        for (int j = 0; j < cols; j++){
+        for (int j = 0; j < COLS; j++){
 
             int textureNum;
 
@@ -312,11 +194,7 @@ sf::RenderTexture createGridTexture(int grid[8][8]){
 
             };
             
-            // spriteGrid[i][j]->setTexture(textureArray[textureNum]);
-            // spriteGrid[i][j]->setScale({(cellSize / textureArray[textureNum].getSize().x), (cellSize / textureArray[textureNum].getSize().y)});
-            // sf::Vector2f pos {(j*cellSize), (i*cellSize)}; // position vector for the new cell
-            // spriteGrid[i][j]->setPosition(pos);
-
+            
             sf::Sprite temp(textureArray[textureNum]);
             temp.setScale({(cellSize / textureArray[textureNum].getSize().x), (cellSize / textureArray[textureNum].getSize().y)});
             sf::Vector2f pos {(j*cellSize), (i*cellSize)}; // position vector for the new cell
@@ -327,13 +205,16 @@ sf::RenderTexture createGridTexture(int grid[8][8]){
         }
 
     }
-
     gridRT.display();
     return gridRT;
 }
 
+
+
+
 void drawLvl1Screen(sf::RenderWindow& window){
     
+    // updateGrid(grid, rows);
 
     float prev = 0.f;
 
@@ -354,12 +235,11 @@ void drawLvl1Screen(sf::RenderWindow& window){
     sf::RenderTexture gridRT = createGridTexture(grid);
     gridRT.display();
     // drawing the grid
-    
     gridElement = sf::Sprite(gridRT.getTexture());
 
     center = gridElement.getLocalBounds().size / 2.f;
     gridElement.setOrigin(center);
-    gridElement.setPosition({(window.getSize().x / 2.f), (prev + margin + center.y)});
+    gridElement.setPosition({(window.getSize().x / 2.f), (prev + margin + center.y + 50)});
 
     prev = margin;
 
@@ -398,17 +278,125 @@ void drawLvl1Screen(sf::RenderWindow& window){
     scoreText.setOrigin(center);
 
     scoreText.setPosition(sf::Vector2f{50.f , prev});
-    sf::Sprite checkCandy = sf::Sprite(gridRT.getTexture());
-    checkCandy.setPosition(sf::Vector2f(100.f, 200.f));
 
     window.draw(title);
     window.draw(backBtnLvl1);
     window.draw(movesText);
     window.draw(scoreText);
     window.draw(gridElement);
-    // window.draw(checkCandy);
 
 }
+
+// void outlineShape(sf::RenderWindow& window, sf::Vector2f mousePos){
+
+//     for(int r = 0; r < rows; r++){
+
+//         for (int c = 0; c < cols; c++){
+
+//             if(spriteGrid[r][c]->getGlobalBounds().contains(mousePos)){
+
+//                 sf::FloatRect rect = spriteGrid[r][c]->getGlobalBounds();
+//                 sf::RectangleShape sel;
+//                 sel.setPosition({rect.position.x, rect.position.y});
+//                 sel.setSize({rect.size.x, rect.size.y});
+//                 sel.setFillColor(sf::Color::Transparent);
+//                 sel.setOutlineColor(sf::Color::Yellow);
+//                 sel.setOutlineThickness(3.f);
+
+//                 window.draw(sel);
+//                 return;
+                
+//             }
+
+//         }
+
+//     }
+
+// }
+
+void inputHandleGrid(sf::Vector2f mousePos, sf::RenderWindow& window, int& index) {
+
+    // detect single click (not hold)
+    bool mousePressed = sf::Mouse::isButtonPressed(sf::Mouse::Button::Left);
+
+    if(mousePressed == false){
+        return;
+    }
+
+    // find clicked cell
+    for (int r = 0; r < ROWS; r++) {
+        for (int c = 0; c < COLS; c++) {
+
+            if (spriteGrid[r][c]->getGlobalBounds().contains(mousePos)) {
+
+                
+                // FIRST SELECTION
+                if (!selected) {
+
+                    if(grid[r][c] == 6){
+                        int coords[] = {r,c};
+                        // explodingCandyHandler(grid, coords);
+                        score += 250;
+                    }
+
+                    selected = true;
+                    selectedCell[0] = r;
+                    selectedCell[1] = c;
+
+                    return;
+                }
+
+                // SECOND SELECTION
+                int cell[2] = {r, c};
+
+                cout << grid[r][c];
+                // swap attempt
+                swapCells(cell, selectedCell, grid);
+                cout << grid[r][c];
+
+                sf::RenderTexture newRt = createGridTexture(grid);
+                gridElement = sf::Sprite(newRt.getTexture());
+
+                if(isWithin1(grid, cell, selectedCell)){
+                    
+                    // if not valid
+                    if (!isMoveValid(grid)) {
+                        cout << "invalid move";
+                        // sf::sleep(sf::seconds(0.5f));
+                        swapCells(cell, selectedCell, grid);
+                    } 
+                    else {
+                        
+                        updateGrid(grid, ROWS, isActive, score);
+
+                        moves--;
+                        score += 20;
+
+                        if (isWon(window)){
+
+                            window.display();
+                            sf::sleep(sf::seconds(1.5f));
+                            index = 2;
+
+                        }
+                    }
+                }else {
+                    swapCells(cell,selectedCell, grid);
+                }
+
+                
+
+                // reset selection
+                selected = false;
+                selectedCell[0] = -1;
+                selectedCell[1] = -1;
+
+                return;
+            }
+        }
+    }
+}
+
 
 void Lvl1ScreenInputHandling(sf::RenderWindow& window, int& index){
 
@@ -417,15 +405,25 @@ void Lvl1ScreenInputHandling(sf::RenderWindow& window, int& index){
     //convert that into coords
     sf::Vector2f mousePos = window.mapPixelToCoords(temp);
 
+
     // back btn
     if(backBtnLvl1.getGlobalBounds().contains(mousePos)){
-
+        selected = false;
         index = 1; // save and exit option later
 
-    }else if(isInGrid(mousePos)){
+    }else {
+
+        sf::Vector2f gridTopLeft = gridElement.getPosition() - gridElement.getOrigin();
+        sf::Vector2f local = mousePos - gridTopLeft;
+
+        if(isInGrid(local)){
+            inputHandleGrid(local, window, index);
+
+        }
         
-        inputHandleGrid(mousePos);
 
     }
 
 }   
+
+
