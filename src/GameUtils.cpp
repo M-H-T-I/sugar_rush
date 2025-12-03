@@ -1,7 +1,7 @@
 #include "GameUtils.hpp"
 
 int COLS = 8, ROWS = 8; // constant
-uint length = 400, width = 400;
+unsigned int length = 400, width = 400;
 float cellSize = length / COLS;
 
 
