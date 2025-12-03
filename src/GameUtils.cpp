@@ -19,34 +19,35 @@ bool isWithin1(int grid[][8], int first[2], int second[2]){
 
 void explodingCandyHandler(int grid[][8], int coord[]){
 
-    int left = coord[0] - 1; // x val
-    int right = coord[0] + 1; //x val
-    int top = coord[1] -1; // y val
-    int bottom = coord[1] + 1;
+    int left = coord[1] - 1; // x val
+    int right = coord[1] + 1; //x val
+    int top = coord[0] -1; // y val
+    int bottom = coord[0] + 1;
+    grid[coord[0]][coord[1]] = 8;
 
     if(left >= 0){
-        grid[left][coord[1]] = 8;
+        grid[coord[0]][left] = 8;
     }
 
     if (right < COLS){
         
-        grid[right][coord[1]] = 8;
+        grid[coord[0]][right] = 8;
 
     }
     
     if (top >= 0){
-        grid[coord[0]][top] = 8;
+        grid[top][coord[1]] = 8;
     }
 
     if(bottom >= ROWS){
 
-        grid[coord[0]][bottom] = 8;
+        grid[bottom][coord[1]] = 8;
 
     }
 
+
     bombSound.play();
-
-
+    
 }
 
 // populates empty spaces

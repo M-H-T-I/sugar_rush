@@ -5,7 +5,7 @@
 #include "GridUtils.hpp"
 
 
-extern uint length, width;
+extern unsigned int length, width;
 extern int COLS, ROWS;
 extern float cellSize;
 

@@ -22,16 +22,20 @@ bool loadSound(){
 
 
     
-    if(!music.openFromFile("assets/sound/CandyCrushMusic.mp3") && !(bombSound.openFromFile("assets/sound/boom.ogg"))){
+    if(!music.openFromFile("assets/sound/CandyCrushMusic.mp3") || !bombSound.openFromFile("assets/sound/boom.mp3")){
         cout << "COuld not open audio file" << endl;
         return false;
+
+
     }else {
+        music.play();
         music.setLooping(true);
-        bombSound.setVolume(15.f);
+        bombSound.setVolume(25.f);
         music.setVolume(20.f);
         music.play();
-    }
-
+        bombSound.play();
+    }   
+    cout << "sound loaded";
     return true;
 }
 
@@ -65,6 +69,7 @@ bool loadAssets(){
 
     if (!loadFont()) return false;
     if(!initTextures()) return false;
+    if (!loadSound()) return false;
     return true;
 
 }

@@ -7,7 +7,7 @@ bool selected = false;
 int selectedCell[] = {-1, -1}; // unselected state is -1, -1
 int matchType = 0;
 bool isActive = false;
-int moves = 20, score = 2450, requiredScore = 2500, margin = 50; 
+int moves = 20, score = 0, requiredScore = 2500, margin = 50; 
 
 bool mousePressedLastFrame = false;
 
@@ -60,9 +60,9 @@ bool isWon(sf::RenderWindow& window){
 
     // Measure text and compute box size with padding
     sf::FloatRect tb = txt.getLocalBounds(); // left/top may be non-zero
-    float paddingX = 40.f;
-    float paddingY = 24.f;
-    sf::Vector2f boxSize(tb.size.x + paddingX * 2.f, tb.size.y + paddingY * 2.f);
+    float paddingX = 50.f;
+    float paddingY = 30.f;
+    sf::Vector2f boxSize((tb.size.x + paddingX * 2.f), (tb.size.y + paddingY * 2.f));
 
     // Center of the window
     sf::Vector2u winSize = window.getSize();

@@ -6,7 +6,12 @@
 int main(){
 
     // initiaizing everything
-    if(!loadAssets() && !loadSound()) return -1;
+    if(!loadAssets()){
+
+        return -1;
+        
+    }
+
     initRandom(); // initializing seed
     initLevel1();
 
