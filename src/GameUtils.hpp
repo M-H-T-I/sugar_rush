@@ -1,8 +1,11 @@
+/* This file has the funtions required by all the levels in the game as well as important
+variables that will be used by those levels as well.*/
+
+
 #ifndef GAME_UTILS
 #define GAMR_UTILS
 
 #include "common.hpp"
-#include "GridUtils.hpp"
 
 
 extern unsigned int length, width;
@@ -30,4 +33,8 @@ void prepareGrid(int grid[][8], int rows, int cols, bool isActive, int score);
 bool isWithin1(int grid[][8], int first[2], int second[2]);
 
 void explodingCandyHandler(int grid[][8], int coords[]);
+
+void initGrid(int grid[][8], int rows); // initializes the grid with random values
+int generateRandom(); // generates a random number between 1-5 (all candies exxcept the special ones)
+
 #endif

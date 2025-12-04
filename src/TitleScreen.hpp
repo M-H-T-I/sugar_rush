@@ -1,3 +1,5 @@
+// logic for title screen window
+
 #include "common.hpp"
 
 extern sf::Text titleText, playText, settingsText, newUserText;

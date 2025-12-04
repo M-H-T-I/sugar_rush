@@ -3,12 +3,16 @@
 
 // ----------------------------- NECESSARY DATA ----------------------------
 
+// used for input handling 
 bool selected = false;
 int selectedCell[] = {-1, -1}; // unselected state is -1, -1
-int matchType = 0;
+
+// used to tell if game has started. Used in preparing the level
 bool isActive = false;
+// imp data
 int moves = 20, score = 0, requiredScore = 2500, margin = 50; 
 
+// used to tell if mouse was clicked in the previous frame (input handling ma use hona)
 bool mousePressedLastFrame = false;
 
 
@@ -19,12 +23,12 @@ sf::Sprite gridElement(textureArray[8]);
 
 
 
+sf::RenderWindow localWindow;
 
 // ---------------------------------------- GRID INFO ----------------------------------//
 
 int grid[8][8];
 sf::Sprite* spriteGrid[8][8]; // will save all the sprites so I dont have to do any calculations
-
 
 
 
@@ -57,6 +61,8 @@ bool isWon(sf::RenderWindow& window){
     txt.setCharacterSize(64);               // adjust as needed
     txt.setStyle(sf::Text::Bold);
     txt.setFillColor(sf::Color::White);
+    auto center = txt.getLocalBounds().size / 2.f;
+    txt.setOrigin(center);
 
     // Measure text and compute box size with padding
     sf::FloatRect tb = txt.getLocalBounds(); // left/top may be non-zero
@@ -66,7 +72,7 @@ bool isWon(sf::RenderWindow& window){
 
     // Center of the window
     sf::Vector2u winSize = window.getSize();
-    sf::Vector2f center((float)winSize.x / 2.f, (float)winSize.y / 2.f);
+    center = {(float)winSize.x / 2.f, (float)winSize.y / 2.f};
 
     // Create the box
     sf::RectangleShape box(boxSize);
@@ -126,13 +132,18 @@ bool initLevel1(){
 
     bool valid = true;
 
+    // assign its grid values
     initGrid(grid, 8);
-    initSprites();
+
+    initSprites(); // no chance for failure really (no exception needed)
+
+    // removes any and all matches
     prepareGrid(grid, ROWS, COLS, isActive, score);
 
+    // level is active
     isActive = true;
 
-    cout << "initialized sprites for level 1" << endl;
+    cout << "initialized level 1" << endl;
 
     return valid;
 }
@@ -210,8 +221,6 @@ sf::RenderTexture createGridTexture(int grid[8][8]){
 }
 
 
-
-
 void drawLvl1Screen(sf::RenderWindow& window){
     
     // updateGrid(grid, rows);
@@ -287,32 +296,6 @@ void drawLvl1Screen(sf::RenderWindow& window){
 
 }
 
-// void outlineShape(sf::RenderWindow& window, sf::Vector2f mousePos){
-
-//     for(int r = 0; r < rows; r++){
-
-//         for (int c = 0; c < cols; c++){
-
-//             if(spriteGrid[r][c]->getGlobalBounds().contains(mousePos)){
-
-//                 sf::FloatRect rect = spriteGrid[r][c]->getGlobalBounds();
-//                 sf::RectangleShape sel;
-//                 sel.setPosition({rect.position.x, rect.position.y});
-//                 sel.setSize({rect.size.x, rect.size.y});
-//                 sel.setFillColor(sf::Color::Transparent);
-//                 sel.setOutlineColor(sf::Color::Yellow);
-//                 sel.setOutlineThickness(3.f);
-
-//                 window.draw(sel);
-//                 return;
-                
-//             }
-
-//         }
-
-//     }
-
-// }
 
 void inputHandleGrid(sf::Vector2f mousePos, sf::RenderWindow& window, int& index) {
 
@@ -335,8 +318,10 @@ void inputHandleGrid(sf::Vector2f mousePos, sf::RenderWindow& window, int& index
 
                     if(grid[r][c] == 6){
                         int coords[] = {r,c};
-                        // explodingCandyHandler(grid, coords);
+                        explodingCandyHandler(grid, coords);
+                        moves--;
                         score += 250;
+                        return;
                     }
 
                     selected = true;
@@ -350,6 +335,7 @@ void inputHandleGrid(sf::Vector2f mousePos, sf::RenderWindow& window, int& index
                 int cell[2] = {r, c};
 
                 cout << grid[r][c];
+
                 // swap attempt
                 swapCells(cell, selectedCell, grid);
                 cout << grid[r][c];
@@ -361,9 +347,11 @@ void inputHandleGrid(sf::Vector2f mousePos, sf::RenderWindow& window, int& index
                     
                     // if not valid
                     if (!isMoveValid(grid)) {
+
                         cout << "invalid move";
                         // sf::sleep(sf::seconds(0.5f));
                         swapCells(cell, selectedCell, grid);
+
                     } 
                     else {
                         
@@ -375,7 +363,6 @@ void inputHandleGrid(sf::Vector2f mousePos, sf::RenderWindow& window, int& index
                         if (isWon(window)){
 
                             window.display();
-                            sf::sleep(sf::seconds(1.5f));
                             index = 2;
 
                         }

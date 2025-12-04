@@ -5,6 +5,32 @@ unsigned int length = 400, width = 400;
 float cellSize = length / COLS;
 
 
+int generateRandom(){
+
+    int n = std::rand() % 5 + 1; // 1- 5
+    return n;
+
+}
+
+void initGrid(int grid[][8], int rows){    
+    
+    initRandom();
+
+    for (int i = 0; i < rows; i++){
+
+        for (int j = 0; j < 8; j++){
+            
+            int n = generateRandom();
+            grid[i][j] = n;
+
+        }
+
+    }
+
+}
+
+
+
 bool isWithin1(int grid[][8], int first[2], int second[2]){
 
     if(first[0] - second[0] > 1 || first[0] - second[0] < -1) return false;
@@ -39,7 +65,7 @@ void explodingCandyHandler(int grid[][8], int coord[]){
         grid[top][coord[1]] = 8;
     }
 
-    if(bottom >= ROWS){
+    if(bottom < ROWS){
 
         grid[bottom][coord[1]] = 8;
 

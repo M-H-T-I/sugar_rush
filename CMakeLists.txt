@@ -23,7 +23,6 @@ target_sources(main
         src/TitleScreen.cpp
         src/common.cpp
         src/LvlSelector.cpp
-        src/GridUtils.cpp
         src/Lvl1.cpp
         src/GameUtils.cpp
 )

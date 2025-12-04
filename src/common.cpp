@@ -6,8 +6,10 @@ sf::Font globalFont;
 sf::Music bombSound, music;
 sf::Texture textureArray[9];
 
+// represent the states of game
 string states[7] = {"title", "levelSelector", "lvl1", "lvl2", "lvl3", "tutorial", "settings"};
 
+//loads the font used within the game.
 bool loadFont(){
 
     if(!globalFont.openFromFile("assets/fonts/Jaro-Regular.ttf")){
@@ -18,6 +20,7 @@ bool loadFont(){
     return true;
 }
 
+//loads all sound that is used within the game
 bool loadSound(){
 
 
@@ -33,7 +36,6 @@ bool loadSound(){
         bombSound.setVolume(25.f);
         music.setVolume(20.f);
         music.play();
-        bombSound.play();
     }   
     cout << "sound loaded";
     return true;
@@ -65,6 +67,7 @@ bool initTextures(){
 
 } 
 
+// loads all assets and returns false if any of the loading functions within it fail.
 bool loadAssets(){
 
     if (!loadFont()) return false;
@@ -74,6 +77,7 @@ bool loadAssets(){
 
 }
 
+// initializes the seed to be used for random num generation.
 void initRandom(){
 
     srand(time(nullptr));
