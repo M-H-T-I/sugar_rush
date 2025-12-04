@@ -43,6 +43,29 @@ bool isWithin1(int grid[][8], int first[2], int second[2]){
 
 }
 
+
+void rowCandyHandler(int grid[][8], int coord[]){
+
+    int left = coord[1] - 0; // x val
+    int right = ROWS - coord[1]; //x val
+    grid[coord[0]][coord[1]] = 8;    
+
+
+    if(left > 0){
+        for (int i = 0; i < coord[1]; i++) grid[coord[0]][i] = 8;
+    }
+
+    if (right > 0){
+        
+        for (int i = coord[1] + 1; i < COLS; i++) grid[coord[0]][i] = 8;
+
+    }
+
+    popSound.play();
+
+    return;
+}
+
 void explodingCandyHandler(int grid[][8], int coord[]){
 
     int left = coord[1] - 1; // x val
@@ -286,6 +309,7 @@ void applyGravity(int grid[][8], int rows, int cols) {
 void updateGrid(int grid[][8], int rows, bool isActive, int score){
 
     prepareGrid(grid, rows, 8, isActive, score);
+
 }
 
 

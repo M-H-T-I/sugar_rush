@@ -3,7 +3,7 @@
 
 sf::Texture backgroundImageTexture;
 sf::Font globalFont;
-sf::Music bombSound, music;
+sf::Music bombSound, music, popSound;
 sf::Texture textureArray[9];
 
 // represent the states of game
@@ -25,7 +25,7 @@ bool loadSound(){
 
 
     
-    if(!music.openFromFile("assets/sound/CandyCrushMusic.mp3") || !bombSound.openFromFile("assets/sound/boom.mp3")){
+    if(!music.openFromFile("assets/sound/CandyCrushMusic.mp3") || !bombSound.openFromFile("assets/sound/boom.mp3") || !popSound.openFromFile("assets/sound/pop.mp3")){
         cout << "COuld not open audio file" << endl;
         return false;
 

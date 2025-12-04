@@ -33,6 +33,7 @@ void prepareGrid(int grid[][8], int rows, int cols, bool isActive, int score);
 bool isWithin1(int grid[][8], int first[2], int second[2]);
 
 void explodingCandyHandler(int grid[][8], int coords[]);
+void rowCandyHandler(int grid[][8], int coord[]);
 
 void initGrid(int grid[][8], int rows); // initializes the grid with random values
 int generateRandom(); // generates a random number between 1-5 (all candies exxcept the special ones)

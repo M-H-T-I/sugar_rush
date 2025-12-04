@@ -22,8 +22,7 @@ sf::Text scoreText(globalFont);
 sf::Sprite gridElement(textureArray[8]);
 
 
-
-sf::RenderWindow localWindow;
+sf::RenderTexture gridRT({length, width});
 
 // ---------------------------------------- GRID INFO ----------------------------------//
 
@@ -37,7 +36,7 @@ sf::Sprite* spriteGrid[8][8]; // will save all the sprites so I dont have to do 
 void swapWithAnimation(int grid[][8], int coord1[], int coord2[], sf::RenderWindow& window){
     
     // Redraw swapped grid
-    createGridTexture(grid);
+    createGridTexture(grid, gridRT);
     window.clear();
     drawLvl1Screen(window); // your draw function
     window.display();
@@ -48,7 +47,7 @@ void swapWithAnimation(int grid[][8], int coord1[], int coord2[], sf::RenderWind
 
         swapCells(coord1, coord2, grid);
 
-        createGridTexture(grid);
+        createGridTexture(grid, gridRT);
         window.clear();
         drawLvl1Screen(window);
         window.display();
@@ -149,10 +148,9 @@ bool initLevel1(){
 }
 
 // creates the inside of my grid
-sf::RenderTexture createGridTexture(int grid[8][8]){
+void createGridTexture(int grid[8][8], sf::RenderTexture& gridTexture){
 
-    sf::RenderTexture gridRT({length, width}); // the texture
-    gridRT.clear(sf::Color::White);
+    gridTexture.clear(sf::Color::White);
 
     // using the grid array
     for (int i = 0; i < ROWS; i++){
@@ -211,13 +209,12 @@ sf::RenderTexture createGridTexture(int grid[8][8]){
             sf::Vector2f pos {(j*cellSize), (i*cellSize)}; // position vector for the new cell
             temp.setPosition(pos);
             *spriteGrid[i][j] = temp;
-            gridRT.draw(temp);
+            gridTexture.draw(temp);
 
         }
 
     }
-    gridRT.display();
-    return gridRT;
+    gridTexture.display();
 }
 
 
@@ -241,8 +238,8 @@ void drawLvl1Screen(sf::RenderWindow& window){
 
     prev += title.getLocalBounds().size.y + margin;
 
-    sf::RenderTexture gridRT = createGridTexture(grid);
-    gridRT.display();
+    createGridTexture(grid, gridRT);
+
     // drawing the grid
     gridElement = sf::Sprite(gridRT.getTexture());
 
@@ -322,6 +319,15 @@ void inputHandleGrid(sf::Vector2f mousePos, sf::RenderWindow& window, int& index
                         moves--;
                         score += 250;
                         return;
+                        
+                    }else if(grid[r][c] == 7){
+
+                        int coords[] = {r,c};
+                        rowCandyHandler(grid, coords);
+                        moves--;
+                        score += 500;
+                        return;
+
                     }
 
                     selected = true;
@@ -340,8 +346,8 @@ void inputHandleGrid(sf::Vector2f mousePos, sf::RenderWindow& window, int& index
                 swapCells(cell, selectedCell, grid);
                 cout << grid[r][c];
 
-                sf::RenderTexture newRt = createGridTexture(grid);
-                gridElement = sf::Sprite(newRt.getTexture());
+                createGridTexture(grid, gridRT);
+                gridElement = sf::Sprite(gridRT.getTexture());
 
                 if(isWithin1(grid, cell, selectedCell)){
                     
