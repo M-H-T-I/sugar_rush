@@ -4,80 +4,36 @@
 // ----------------------------- NECESSARY DATA ----------------------------
 
 // used for input handling 
-bool selected = false;
-int selectedCell[] = {-1, -1}; // unselected state is -1, -1
+static bool selected = false;
+static int selectedCell[] = {-1, -1}; // unselected state is -1, -1
 
 // used to tell if game has started. Used in preparing the level
-bool isActive = false;
+static bool isActive = false;
 
-bool lvlEnd;
+static bool lvlEnd;
 // imp data
-int moves = 20, score = 0, requiredScore = 1500, margin = 50; 
+static int moves = 20, score = 0, requiredScore = 1500, margin = 50; 
 
 // used to tell if mouse was clicked in the previous frame (input handling ma use hona)
-bool mousePressedLastFrame = false;
+static bool mousePressedLastFrame = false;
 
 
-sf::Text backBtnLvl1(globalFont);
-sf::Text movesText(globalFont);
-sf::Text scoreText(globalFont);
-sf::Sprite gridElement(textureArray[8]);
-sf::Text exitBtn(globalFont);
+static sf::Text backBtnLvl1(globalFont);
+static sf::Text movesText(globalFont);
+static sf::Text scoreText(globalFont);
+static sf::Sprite gridElement(textureArray[8]);
+static sf::Text exitBtn(globalFont);
 
-sf::RenderTexture gridRT({length, width});
+static sf::RenderTexture gridRT({length, width});
 
 // ---------------------------------------- GRID INFO ----------------------------------//
 
-int grid[8][8];
-sf::Sprite* spriteGrid[8][8]; // will save all the sprites so I dont have to do any calculations
+static int grid[8][8];
+static sf::Sprite* spriteGrid[8][8]; // will save all the sprites so I dont have to do any calculations
 
 
 
 // ------------------ Functions---------------------------- 
-
-void swapWithAnimation(int grid[][8], int coord1[], int coord2[], sf::RenderWindow& window){
-    
-    // Redraw swapped grid
-    createGridTexture(grid, gridRT);
-    window.clear();
-    drawLvl1Screen(window); // your draw function
-    window.display();
-
-    // If move invalid, wait 0.5s and swap back
-    if(!isMoveValid(grid)){
-
-        swapCells(coord1, coord2, grid);
-
-        createGridTexture(grid, gridRT);
-        window.clear();
-        drawLvl1Screen(window);
-        window.display();
-    }
-}
-
-
-
-bool isInGrid(sf::Vector2f mousePos) {
-    for (int r = 0; r < ROWS; r++) {
-        for (int c = 0; c < COLS; c++) {
-            if (spriteGrid[r][c]->getGlobalBounds().contains(mousePos))
-                return true;
-        }
-    }
-    return false;
-}
-
-
-void initSprites(){
-
-    for (int row = 0; row < ROWS; row++){
-
-        for (int c = 0; c < COLS; c++){
-            spriteGrid[row][c] = new sf::Sprite(textureArray[8]);
-        }
-    }
-
-}
 
 // called before mainloop is initialized
 bool initLevel1(){
@@ -89,7 +45,7 @@ bool initLevel1(){
     // assign its grid values
     initGrid(grid, 8);
 
-    initSprites(); // no chance for failure really (no exception needed)
+    initSprites(spriteGrid); // no chance for failure really (no exception needed)
 
     // removes any and all matches
     prepareGrid(grid, ROWS, COLS, isActive, score);
@@ -101,76 +57,6 @@ bool initLevel1(){
     cout << "initialized level 1" << endl;
 
     return valid;
-}
-
-// creates the inside of my grid
-void createGridTexture(int grid[8][8], sf::RenderTexture& gridTexture){
-
-    gridTexture.clear(sf::Color::White);
-
-    // using the grid array
-    for (int i = 0; i < ROWS; i++){
-
-        for (int j = 0; j < COLS; j++){
-
-            int textureNum;
-
-            switch (grid[i][j]){
-
-            case 1:
-                
-                textureNum = 0;
-                break;
-
-            case 2:
-
-                textureNum = 1;
-                break;
-
-            case 3:
-
-                textureNum = 2;
-                break;
-
-            case 4:
-
-                textureNum = 5;
-                break;
-
-            case 5: 
-                
-                textureNum = 4;
-                break;
-
-            case 6:
-
-                textureNum = 6;
-                break;
-            
-            case 7:
-
-                textureNum = 7;
-                break;
-
-            case 8:
-
-                textureNum = 8;
-                break;
-
-            };
-            
-            
-            sf::Sprite temp(textureArray[textureNum]);
-            temp.setScale({(cellSize / textureArray[textureNum].getSize().x), (cellSize / textureArray[textureNum].getSize().y)});
-            sf::Vector2f pos {(j*cellSize), (i*cellSize)}; // position vector for the new cell
-            temp.setPosition(pos);
-            *spriteGrid[i][j] = temp;
-            gridTexture.draw(temp);
-
-        }
-
-    }
-    gridTexture.display();
 }
 
 
@@ -194,7 +80,7 @@ void drawLvl1Screen(sf::RenderWindow& window){
 
     prev += title.getLocalBounds().size.y + margin;
 
-    createGridTexture(grid, gridRT);
+    createGridTexture(grid, gridRT, spriteGrid);
 
     // drawing the grid
     gridElement = sf::Sprite(gridRT.getTexture());
@@ -262,7 +148,7 @@ void drawLvl1Screen(sf::RenderWindow& window){
 }
 
 
-void inputHandleGrid(sf::Vector2f mousePos, sf::RenderWindow& window, int& index) {
+static void inputHandleGrid(sf::Vector2f mousePos, sf::RenderWindow& window, int& index) {
 
     // detect single click (not hold)
     bool mousePressed = sf::Mouse::isButtonPressed(sf::Mouse::Button::Left);
@@ -313,7 +199,7 @@ void inputHandleGrid(sf::Vector2f mousePos, sf::RenderWindow& window, int& index
                 swapCells(cell, selectedCell, grid);
                 cout << grid[r][c];
 
-                createGridTexture(grid, gridRT);
+                createGridTexture(grid, gridRT,spriteGrid);
                 gridElement = sf::Sprite(gridRT.getTexture());
 
                 if(isWithin1(grid, cell, selectedCell)){
@@ -380,7 +266,7 @@ void Lvl1ScreenInputHandling(sf::RenderWindow& window, int& index){
         sf::Vector2f gridTopLeft = gridElement.getPosition() - gridElement.getOrigin();
         sf::Vector2f local = mousePos - gridTopLeft;
 
-        if(isInGrid(local)){
+        if(isInGrid(local, spriteGrid)){
             inputHandleGrid(local, window, index);
 
         }

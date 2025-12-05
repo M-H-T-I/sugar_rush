@@ -44,4 +44,9 @@ bool isLvlEnd(int score, int requiredScore, int moves); // tells if a level is w
 void drawWinScreen(sf::RenderWindow& window, sf::Text& exitBtn);
 void drawLoseScreen(sf::RenderWindow& window, sf::Text& exitBtn);
 
+bool isInGrid(sf::Vector2f mousePos, sf::Sprite* spriteGrid[][8]);
+
+void initSprites(sf::Sprite* spriteGrid[][8]);
+
+void createGridTexture(int grid[][8], sf::RenderTexture& gridTexture, sf::Sprite* spriteGrid[][8]);
 #endif

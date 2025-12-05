@@ -4,9 +4,6 @@
 #include "GameUtils.hpp"
 #include <SFML/System.hpp>
 
-extern int moves, score, requiredScore;
-extern int grid[8][8];
-extern bool isActive;
 
 
 bool initLevel1(); // initializes the grid by assigning values to each cell

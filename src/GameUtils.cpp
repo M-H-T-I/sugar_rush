@@ -29,6 +29,97 @@ void initGrid(int grid[][8], int rows){
 
 }
 
+void initSprites(sf::Sprite* spriteGrid[][8]){
+
+    for (int row = 0; row < ROWS; row++){
+
+        for (int c = 0; c < COLS; c++){
+            spriteGrid[row][c] = new sf::Sprite(textureArray[8]);
+        }
+    }
+
+}
+
+// creates the inside of my grid
+void createGridTexture(int grid[][8], sf::RenderTexture& gridTexture, sf::Sprite* spriteGrid[][8]){
+
+    gridTexture.clear(sf::Color::White);
+
+    // using the grid array
+    for (int i = 0; i < ROWS; i++){
+
+        for (int j = 0; j < COLS; j++){
+
+            int textureNum;
+
+            switch (grid[i][j]){
+
+            case 1:
+                
+                textureNum = 0;
+                break;
+
+            case 2:
+
+                textureNum = 1;
+                break;
+
+            case 3:
+
+                textureNum = 2;
+                break;
+
+            case 4:
+
+                textureNum = 5;
+                break;
+
+            case 5: 
+                
+                textureNum = 4;
+                break;
+
+            case 6:
+
+                textureNum = 6;
+                break;
+            
+            case 7:
+
+                textureNum = 7;
+                break;
+
+            case 8:
+
+                textureNum = 8;
+                break;
+
+            };
+            
+            
+            sf::Sprite temp(textureArray[textureNum]);
+            temp.setScale({(cellSize / textureArray[textureNum].getSize().x), (cellSize / textureArray[textureNum].getSize().y)});
+            sf::Vector2f pos {(j*cellSize), (i*cellSize)}; // position vector for the new cell
+            temp.setPosition(pos);
+            *spriteGrid[i][j] = temp;
+            gridTexture.draw(temp);
+
+        }
+
+    }
+    gridTexture.display();
+}
+
+bool isInGrid(sf::Vector2f mousePos, sf::Sprite* spriteGrid[][8]) {
+    for (int r = 0; r < ROWS; r++) {
+        for (int c = 0; c < COLS; c++) {
+            if (spriteGrid[r][c]->getGlobalBounds().contains(mousePos))
+                return true;
+        }
+    }
+    return false;
+}
+
 void drawWinScreen(sf::RenderWindow& window, sf::Text& exitBtn){
 
 
