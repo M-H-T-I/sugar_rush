@@ -24,6 +24,8 @@ target_sources(main
         src/common.cpp
         src/LvlSelector.cpp
         src/Lvl1.cpp
+        src/Lvl2.cpp
+        src/Lvl3.cpp
         src/GameUtils.cpp
         src/Settings.cpp
 )

@@ -81,7 +81,9 @@ void SettingsScreenInputHandling(sf::RenderWindow& window, int& index){
 
     if(backBtnSettings.getGlobalBounds().contains(mousePos)){
         index = 0;
+
     }else if(muteBtn.getGlobalBounds().contains(mousePos)){
+        
         muteMusic = !muteMusic;
         
         if (muteMusic){

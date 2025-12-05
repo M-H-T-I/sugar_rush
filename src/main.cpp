@@ -3,6 +3,8 @@
 #include "LvlSelector.hpp"
 #include "Lvl1.hpp"
 #include "Settings.hpp"
+#include "Lvl2.hpp"
+#include "Lvl3.hpp"
 
 int main(){
 
@@ -46,6 +48,14 @@ int main(){
                         lvlSelectorScreenInputHandling(window, index);
                     }else if(index == 2){
                         Lvl1ScreenInputHandling(window, index);
+                    }else if(index == 3){
+
+                        Lvl2ScreenInputHandling(window, index);
+                    
+                    }else if (index == 4){
+                        Lvl3ScreenInputHandling(window, index);
+
+
                     }else if(index == 6){
                         SettingsScreenInputHandling(window, index);
                     }
@@ -74,6 +84,13 @@ int main(){
                 drawLvlSelectorScreen(window);
             }else if(index == 2){
                 drawLvl1Screen(window);
+
+            }else if(index == 3){
+                drawLvl2Screen(window);
+            
+            }else if(index == 4){
+                drawLvl3Screen(window);
+
             }else if(index == 6){
                 drawSettingsScreen(window);
             }

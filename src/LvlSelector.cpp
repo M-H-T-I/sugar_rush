@@ -1,5 +1,7 @@
 #include "LvlSelector.hpp"
 #include "Lvl1.hpp"
+#include "Lvl2.hpp"
+#include "Lvl3.hpp"
 
 sf::Text titleTextLvlSelector(globalFont);
 sf::Text tutorialBtn(globalFont);
@@ -111,15 +113,23 @@ void lvlSelectorScreenInputHandling(sf::RenderWindow& window, int& index){
     sf::Vector2f mousePos = window.mapPixelToCoords(temp);
 
     if(backBtn.getGlobalBounds().contains(mousePos)){
+
         index = 0;
     }else if(lvl1Btn.getGlobalBounds().contains(mousePos)){
+        
         index = 2;
         initLevel1();
 
     }else if(lvl2Btn.getGlobalBounds().contains(mousePos)){
+
         index = 3;
+        initLevel2();
+
     }else if(lvl3Btn.getGlobalBounds().contains(mousePos)){
+
         index = 4;
+        initLevel3();
+
     }else if(tutorialBtn.getGlobalBounds().contains(mousePos)){
         index = 5;
     }
