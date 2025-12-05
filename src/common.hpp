@@ -22,6 +22,9 @@ extern bool userLevels[4];
 extern sf::Texture textureArray[9];
 extern sf::Music music, bombSound, popSound;
 
+// determines if sound is muted
+extern bool muteMusic, muteSfx;
+
 //loads all sound that is used within the game
 bool loadSound();
 

@@ -29,6 +29,79 @@ void initGrid(int grid[][8], int rows){
 
 }
 
+void drawWinScreen(sf::RenderWindow& window, sf::Text& exitBtn){
+
+
+    sf::RectangleShape rect({500, 300});
+    auto center =rect.getLocalBounds().size / 2.f;
+    rect.setOrigin(center);
+    rect.setPosition({(window.getSize().x / 2.f ), (window.getSize().y/2.f)});
+    rect.setFillColor(sf::Color::Black);
+
+
+    sf::Text txt(globalFont);
+    txt.setCharacterSize(52);            
+    txt.setStyle(sf::Text::Bold);
+    center = txt.getLocalBounds().size / 2.f;
+    txt.setFillColor(sf::Color::White);
+    txt.setOrigin(center);
+    txt.setString("You WON!!!");
+    txt.setPosition({(rect.getGlobalBounds().getCenter().x - txt.getLocalBounds().size.x / 2.f), rect.getGlobalBounds().getCenter().y - txt.getLocalBounds().size.y / 2.f});
+
+    exitBtn.setCharacterSize(20);
+    exitBtn.setString("[ Go to Level Selector ]");
+    exitBtn.setOrigin(exitBtn.getLocalBounds().size / 2.f);
+    exitBtn.setPosition({rect.getGlobalBounds().getCenter().x, rect.getGlobalBounds().getCenter().y + txt.getLocalBounds().size.y + 40});
+
+    window.draw(rect);
+    window.draw(txt);
+    window.draw(exitBtn);
+
+}
+
+void drawLoseScreen(sf::RenderWindow& window, sf::Text& exitBtn){
+
+    sf::RectangleShape rect({500, 300});
+    auto center =rect.getLocalBounds().size / 2.f;
+    rect.setOrigin(center);
+    rect.setPosition({(window.getSize().x / 2.f), (window.getSize().y/2.f)});
+    rect.setFillColor(sf::Color::Black);
+
+
+    sf::Text txt(globalFont);
+    txt.setCharacterSize(48);            
+    txt.setStyle(sf::Text::Bold);
+    center = txt.getLocalBounds().size / 2.f;
+    txt.setFillColor(sf::Color::White);
+    txt.setOrigin(center);
+    txt.setString("You Lost");
+    txt.setPosition({(rect.getGlobalBounds().getCenter().x - txt.getLocalBounds().size.x / 2.f), rect.getGlobalBounds().getCenter().y - txt.getLocalBounds().size.y / 2.f});
+
+    exitBtn.setCharacterSize(20);
+    exitBtn.setString("[ Go to Level Selector ]");
+    exitBtn.setOrigin(exitBtn.getLocalBounds().size / 2.f);
+    exitBtn.setPosition({rect.getGlobalBounds().getCenter().x, rect.getGlobalBounds().getCenter().y + txt.getLocalBounds().size.y + 40});
+
+    window.draw(rect);
+    window.draw(txt);
+    window.draw(exitBtn);
+
+}
+
+bool isLvlEnd(int score, int requiredScore, int moves){
+
+    if(moves <= 0 || score >= requiredScore){
+
+        return true;
+
+    }else {
+        return false;
+    }
+
+
+
+
+}
 
 
 bool isWithin1(int grid[][8], int first[2], int second[2]){

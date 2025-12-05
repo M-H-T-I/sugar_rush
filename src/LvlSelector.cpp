@@ -114,6 +114,8 @@ void lvlSelectorScreenInputHandling(sf::RenderWindow& window, int& index){
         index = 0;
     }else if(lvl1Btn.getGlobalBounds().contains(mousePos)){
         index = 2;
+        initLevel1();
+
     }else if(lvl2Btn.getGlobalBounds().contains(mousePos)){
         index = 3;
     }else if(lvl3Btn.getGlobalBounds().contains(mousePos)){

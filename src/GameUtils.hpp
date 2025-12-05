@@ -3,7 +3,7 @@ variables that will be used by those levels as well.*/
 
 
 #ifndef GAME_UTILS
-#define GAMR_UTILS
+#define GAME_UTILS
 
 #include "common.hpp"
 
@@ -36,6 +36,12 @@ void explodingCandyHandler(int grid[][8], int coords[]);
 void rowCandyHandler(int grid[][8], int coord[]);
 
 void initGrid(int grid[][8], int rows); // initializes the grid with random values
+
 int generateRandom(); // generates a random number between 1-5 (all candies exxcept the special ones)
+
+bool isLvlEnd(int score, int requiredScore, int moves); // tells if a level is won or lost
+
+void drawWinScreen(sf::RenderWindow& window, sf::Text& exitBtn);
+void drawLoseScreen(sf::RenderWindow& window, sf::Text& exitBtn);
 
 #endif

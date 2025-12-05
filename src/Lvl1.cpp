@@ -9,8 +9,10 @@ int selectedCell[] = {-1, -1}; // unselected state is -1, -1
 
 // used to tell if game has started. Used in preparing the level
 bool isActive = false;
+
+bool lvlEnd;
 // imp data
-int moves = 20, score = 0, requiredScore = 2500, margin = 50; 
+int moves = 20, score = 0, requiredScore = 1500, margin = 50; 
 
 // used to tell if mouse was clicked in the previous frame (input handling ma use hona)
 bool mousePressedLastFrame = false;
@@ -20,7 +22,7 @@ sf::Text backBtnLvl1(globalFont);
 sf::Text movesText(globalFont);
 sf::Text scoreText(globalFont);
 sf::Sprite gridElement(textureArray[8]);
-
+sf::Text exitBtn(globalFont);
 
 sf::RenderTexture gridRT({length, width});
 
@@ -43,7 +45,6 @@ void swapWithAnimation(int grid[][8], int coord1[], int coord2[], sf::RenderWind
 
     // If move invalid, wait 0.5s and swap back
     if(!isMoveValid(grid)){
-        sf::sleep(sf::seconds(0.5f));
 
         swapCells(coord1, coord2, grid);
 
@@ -54,54 +55,6 @@ void swapWithAnimation(int grid[][8], int coord1[], int coord2[], sf::RenderWind
     }
 }
 
-bool isWon(sf::RenderWindow& window){
-
-    sf::Text txt(globalFont);
-    txt.setCharacterSize(64);               // adjust as needed
-    txt.setStyle(sf::Text::Bold);
-    txt.setFillColor(sf::Color::White);
-    auto center = txt.getLocalBounds().size / 2.f;
-    txt.setOrigin(center);
-
-    // Measure text and compute box size with padding
-    sf::FloatRect tb = txt.getLocalBounds(); // left/top may be non-zero
-    float paddingX = 50.f;
-    float paddingY = 30.f;
-    sf::Vector2f boxSize((tb.size.x + paddingX * 2.f), (tb.size.y + paddingY * 2.f));
-
-    // Center of the window
-    sf::Vector2u winSize = window.getSize();
-    center = {(float)winSize.x / 2.f, (float)winSize.y / 2.f};
-
-    // Create the box
-    sf::RectangleShape box(boxSize);
-    box.setOrigin({boxSize.x / 2.f, boxSize.y / 2.f});
-    box.setPosition(center);
-    box.setFillColor(sf::Color(0, 0, 0, 180));      // semi-transparent black
-    box.setOutlineColor(sf::Color(240, 200, 30));   // gold outline
-    box.setOutlineThickness(4.f);
-
-    // Position text centered inside the box (account for text local bounds)
-    txt.setOrigin({(tb.position.x + tb.size.x / 2.f), (tb.position.y + tb.size.y / 2.f)});
-    txt.setPosition(center);
-
-
-    if(requiredScore <= score){
-        txt.setString("You win");
-        window.draw(box);
-        window.draw(txt);
-        return true;
-    }else{
-        txt.setString("You lose");
-        window.draw(box);
-        window.draw(txt);
-        return false;
-    }
-
-    
-   
-
-}
 
 
 bool isInGrid(sf::Vector2f mousePos) {
@@ -129,6 +82,8 @@ void initSprites(){
 // called before mainloop is initialized
 bool initLevel1(){
 
+    moves = 20;
+    score = 0;
     bool valid = true;
 
     // assign its grid values
@@ -141,6 +96,7 @@ bool initLevel1(){
 
     // level is active
     isActive = true;
+    lvlEnd = false;
 
     cout << "initialized level 1" << endl;
 
@@ -275,7 +231,7 @@ void drawLvl1Screen(sf::RenderWindow& window){
     prev+=movesText.getLocalBounds().size.y + margin;
 
     // score
-    string scoreString = "score: " + std::to_string(score);
+    string scoreString = "score: " + std::to_string(score) + " / " + std::to_string(requiredScore);
     scoreText.setString(scoreString);
     scoreText.setCharacterSize(25);
     scoreText.setFillColor(sf::Color::White);
@@ -283,13 +239,25 @@ void drawLvl1Screen(sf::RenderWindow& window){
     center = scoreText.getLocalBounds().size / 2.f;
     scoreText.setOrigin(center);
 
-    scoreText.setPosition(sf::Vector2f{50.f , prev});
+    scoreText.setPosition(sf::Vector2f{center.x , prev - 20.f});
 
     window.draw(title);
     window.draw(backBtnLvl1);
     window.draw(movesText);
     window.draw(scoreText);
     window.draw(gridElement);
+
+    if(isLvlEnd(score, requiredScore, moves)){
+        
+        if (score >= requiredScore){
+
+            drawWinScreen(window, exitBtn);
+
+        }else{
+
+            drawLoseScreen(window, exitBtn);
+        }
+    }
 
 }
 
@@ -309,7 +277,6 @@ void inputHandleGrid(sf::Vector2f mousePos, sf::RenderWindow& window, int& index
 
             if (spriteGrid[r][c]->getGlobalBounds().contains(mousePos)) {
 
-                
                 // FIRST SELECTION
                 if (!selected) {
 
@@ -354,8 +321,6 @@ void inputHandleGrid(sf::Vector2f mousePos, sf::RenderWindow& window, int& index
                     // if not valid
                     if (!isMoveValid(grid)) {
 
-                        cout << "invalid move";
-                        // sf::sleep(sf::seconds(0.5f));
                         swapCells(cell, selectedCell, grid);
 
                     } 
@@ -366,12 +331,7 @@ void inputHandleGrid(sf::Vector2f mousePos, sf::RenderWindow& window, int& index
                         moves--;
                         score += 20;
 
-                        if (isWon(window)){
-
-                            window.display();
-                            index = 2;
-
-                        }
+                        
                     }
                 }else {
                     swapCells(cell,selectedCell, grid);
@@ -399,11 +359,22 @@ void Lvl1ScreenInputHandling(sf::RenderWindow& window, int& index){
     sf::Vector2f mousePos = window.mapPixelToCoords(temp);
 
 
-    // back btn
-    if(backBtnLvl1.getGlobalBounds().contains(mousePos)){
+    if (isLvlEnd(score, requiredScore, moves)){
+
+        lvlEnd = true;
+
+        if(lvlEnd && exitBtn.getGlobalBounds().contains(mousePos)){
+
+            selected = false;
+            index = 1;
+            return; 
+        }
+
+    }else if(backBtnLvl1.getGlobalBounds().contains(mousePos)){
         selected = false;
         index = 1; // save and exit option later
-
+        return;
+    
     }else {
 
         sf::Vector2f gridTopLeft = gridElement.getPosition() - gridElement.getOrigin();
@@ -413,6 +384,7 @@ void Lvl1ScreenInputHandling(sf::RenderWindow& window, int& index){
             inputHandleGrid(local, window, index);
 
         }
+        
         
 
     }

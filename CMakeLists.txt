@@ -25,6 +25,7 @@ target_sources(main
         src/LvlSelector.cpp
         src/Lvl1.cpp
         src/GameUtils.cpp
+        src/Settings.cpp
 )
 
 target_link_libraries(main SFML::Graphics SFML::Window SFML::Audio)

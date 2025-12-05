@@ -2,6 +2,7 @@
 #include "TitleScreen.hpp"
 #include "LvlSelector.hpp"
 #include "Lvl1.hpp"
+#include "Settings.hpp"
 
 int main(){
 
@@ -13,7 +14,6 @@ int main(){
     }
 
     initRandom(); // initializing seed
-    initLevel1();
 
     int index = 0;
 
@@ -46,6 +46,8 @@ int main(){
                         lvlSelectorScreenInputHandling(window, index);
                     }else if(index == 2){
                         Lvl1ScreenInputHandling(window, index);
+                    }else if(index == 6){
+                        SettingsScreenInputHandling(window, index);
                     }
 
                 }
@@ -72,6 +74,8 @@ int main(){
                 drawLvlSelectorScreen(window);
             }else if(index == 2){
                 drawLvl1Screen(window);
+            }else if(index == 6){
+                drawSettingsScreen(window);
             }
 
             window.display();

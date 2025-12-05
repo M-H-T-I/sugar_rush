@@ -6,6 +6,8 @@ sf::Font globalFont;
 sf::Music bombSound, music, popSound;
 sf::Texture textureArray[9];
 
+bool muteMusic = false, muteSfx = false;
+
 // represent the states of game
 string states[7] = {"title", "levelSelector", "lvl1", "lvl2", "lvl3", "tutorial", "settings"};
 
