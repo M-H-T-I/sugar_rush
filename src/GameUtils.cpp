@@ -184,7 +184,8 @@ void rowCandyHandler(int grid[][8], int coord[]){
 
     popSound.play();
     isAnimating = true;
-    return;
+    score += 500;
+    
 }
 
 void explodingCandyHandler(int grid[][8], int coord[]){
@@ -225,7 +226,7 @@ void explodingCandyHandler(int grid[][8], int coord[]){
 
     isAnimating = true;
     bombSound.play();
-    
+    score+=250;
 }
 
 // populates empty spaces
