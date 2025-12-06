@@ -78,7 +78,6 @@ int main(){
 
             window.clear(sf::Color(60, 176, 205));
 
-            updateGrid(grid, 8);
 
             //checking state
             if(index == 0){
@@ -97,6 +96,8 @@ int main(){
             }else if(index == 6){
                 drawSettingsScreen(window);
             }
+
+            updateGrid(grid, 8);
 
             window.display();
 

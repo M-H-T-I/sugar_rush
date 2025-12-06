@@ -164,7 +164,6 @@ static void inputHandleGrid(sf::Vector2f mousePos, sf::RenderWindow& window, int
                         int coords[] = {r,c};
                         explodingCandyHandler(grid, coords);
                         moves--;
-                        score += 250;
                         return;
                         
                     }else if(grid[r][c] == 7){
@@ -172,7 +171,6 @@ static void inputHandleGrid(sf::Vector2f mousePos, sf::RenderWindow& window, int
                         int coords[] = {r,c};
                         rowCandyHandler(grid, coords);
                         moves--;
-                        score += 500;
                         return;
 
                     }
@@ -209,7 +207,6 @@ static void inputHandleGrid(sf::Vector2f mousePos, sf::RenderWindow& window, int
                         updateGrid(grid, ROWS);
 
                         moves--;
-                        score += 20;
 
                         
                     }

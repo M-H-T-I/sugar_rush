@@ -426,9 +426,12 @@ void applyGravity(int grid[][8], int rows, int cols) {
 }
 void prepareGrid(int grid[][8], int rows, int cols){
 
-    findAndReplaceMatches(grid);
-    applyGravity(grid, rows, 8);
-    populateGrid(grid, rows);
+    while (isMoveValid(grid)){
+        findAndReplaceMatches(grid);
+        applyGravity(grid, rows, 8);
+        populateGrid(grid, rows);
+    }
+    
     
 
 }
