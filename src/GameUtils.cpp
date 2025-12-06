@@ -4,6 +4,11 @@ int COLS = 8, ROWS = 8; // constant
 unsigned int length = 400, width = 400;
 float cellSize = length / COLS;
 
+bool isActive = false;
+
+int score = 0, requiredScore = 1500;
+
+
 bool opaqueGrid[8][8]; // tells which cells need to be opaque
 
 // ----------- Grid INfo
@@ -158,17 +163,26 @@ void rowCandyHandler(int grid[][8], int coord[]){
 
 
     if(left > 0){
-        for (int i = 0; i < coord[1]; i++) grid[coord[0]][i] = 8;
+        for (int i = 0; i < coord[1]; i++){
+
+            grid[coord[0]][i] = 8;
+            opaqueGrid[coord[0]][i] = false;
+        }
     }
 
     if (right > 0){
         
-        for (int i = coord[1] + 1; i < COLS; i++) grid[coord[0]][i] = 8;
+        for (int i = coord[1] + 1; i < COLS; i++){
+
+            grid[coord[0]][i] = 8;
+            opaqueGrid[coord[0]][i] = false;
+
+        } 
 
     }
 
     popSound.play();
-
+    isAnimating = true;
     return;
 }
 
@@ -179,28 +193,36 @@ void explodingCandyHandler(int grid[][8], int coord[]){
     int top = coord[0] -1; // y val
     int bottom = coord[0] + 1;
     grid[coord[0]][coord[1]] = 8;
+    opaqueGrid[coord[0]][coord[1]];
 
     if(left >= 0){
         grid[coord[0]][left] = 8;
+        opaqueGrid[coord[0]][left] = false;
+
     }
 
     if (right < COLS){
         
         grid[coord[0]][right] = 8;
+        opaqueGrid[coord[0]][right] = false;
 
     }
     
     if (top >= 0){
         grid[top][coord[1]] = 8;
+        opaqueGrid[top][coord[1]] = false;
+
     }
+
 
     if(bottom < ROWS){
 
         grid[bottom][coord[1]] = 8;
+        opaqueGrid[bottom][coord[1]] = false;
 
     }
 
-
+    isAnimating = true;
     bombSound.play();
     
 }
@@ -403,9 +425,7 @@ void applyGravity(int grid[][8], int rows, int cols) {
 }
 void prepareGrid(int grid[][8], int rows, int cols){
 
-    while(isMoveValid(grid)){
-        findAndReplaceMatches(grid);
-    }
+    findAndReplaceMatches(grid);
     applyGravity(grid, rows, 8);
     populateGrid(grid, rows);
     
@@ -425,17 +445,22 @@ void replaceRowAnimated(int rowNum, int range[], int grid[][8]){
     case 3:
         
         grid[rowNum][range[0]] = 8; // empty
-        opaqueGrid[rowNum][range[0]] = false;
+        score += 30;
         break;
     case 4:
         
         grid[rowNum][range[0]] = 6;
+        score += 40;
         break;
 
     default:
         grid[rowNum][range[0]] = 7;
+        score+=50;
         break;
     } 
+
+        opaqueGrid[rowNum][range[0]] = false;
+
 
     // rest become empty
     for (int c = range[0] + 1; c <= range[1]; c++){
@@ -454,12 +479,25 @@ void replaceColumnAnimated(int col, int range[], int grid[][8]){
 
     if(length == 3){
 
-        opaqueGrid[range[0]][col] = false;
         grid[range[0]][col] = 8;
 
+        score += 30;
+
     }
-    else if(length == 4) grid[range[0]][col] = 6;
-    else grid[range[0]][col] = 7;
+    else if(length == 4){
+
+        grid[range[0]][col] = 6;
+        score += 40;
+
+    } 
+    else {
+     
+        grid[range[0]][col] = 7;
+        score += 50;
+    }
+    
+    opaqueGrid[range[0]][col] = false;
+
 
     for(int r = range[0] + 1; r <= range[1]; r++) {
 
@@ -595,7 +633,7 @@ void createGridTexture(int grid[][8], sf::RenderTexture& gridTexture, sf::Sprite
 
                     if(tempColor.a > 0){
 
-                        tempColor.a = max(0, (tempColor.a - 1));
+                        tempColor.a = max(0, (tempColor.a - 15));
                         temp->setColor(tempColor);
 
                         finished = false;

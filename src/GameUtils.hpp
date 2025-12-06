@@ -9,12 +9,12 @@ variables that will be used by those levels as well.*/
 
 
 extern unsigned int length, width;
-extern int COLS, ROWS;
+extern int COLS, ROWS, score, requiredScore;
 extern float cellSize;
 
 extern int grid[8][8];
 extern sf::Sprite* spriteGrid[8][8];
-extern bool opaqueGrid [8][8], isAnimating;
+extern bool opaqueGrid [8][8], isAnimating, isActive;
 
 // swaps cells using the indexes given
 void swapCells(int coord1[], int coord2[], int grid[][8]);

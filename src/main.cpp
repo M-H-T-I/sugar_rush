@@ -23,6 +23,7 @@ int main(){
     // main window
     sf::RenderWindow window(sf::VideoMode({800, 600}), "Sugar Rush", sf::Style::Default);
 
+    window.setFramerateLimit(80);
     
 
     // run the program as long as the window is open
@@ -76,6 +77,8 @@ int main(){
         }   
 
             window.clear(sf::Color(60, 176, 205));
+
+            updateGrid(grid, 8);
 
             //checking state
             if(index == 0){

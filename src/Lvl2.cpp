@@ -7,12 +7,10 @@
 static bool selected = false;
 static int selectedCell[] = {-1, -1}; // unselected state is -1, -1
 
-// used to tell if game has started. Used in preparing the level
-static bool isActive = false;
 
 static bool lvlEnd;
 // imp data
-static int moves = 20, score = 0, requiredScore = 1500, margin = 50; 
+static int moves = 20, margin = 50; 
 
 // used to tell if mouse was clicked in the previous frame (input handling ma use hona)
 static bool mousePressedLastFrame = false;
@@ -32,9 +30,7 @@ static sf::RenderTexture gridRT({length, width});
 bool initLevel2(){
 
     moves = 30;
-    score = 0;
     bool valid = true;
-
     requiredScore = 3000;
 
     // assign its grid values
@@ -48,7 +44,8 @@ bool initLevel2(){
     // level is active
     isActive = true;
     lvlEnd = false;
-
+    
+    score = 0;
     cout << "initialized level 2" << endl;
 
     return valid;
