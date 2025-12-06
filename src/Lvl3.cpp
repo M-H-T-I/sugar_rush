@@ -29,11 +29,11 @@ static sf::RenderTexture gridRT({length, width});
 // called before mainloop is initialized
 bool initLevel3(){
 
-    moves = 45;
+    moves = 35;
     score = 0;
     bool valid = true;
 
-    requiredScore = 3500;
+    requiredScore = 4500;
 
     // assign its grid values
     initGrid(grid, 8);

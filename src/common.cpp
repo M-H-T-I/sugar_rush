@@ -3,7 +3,7 @@
 
 sf::Texture backgroundImageTexture;
 sf::Font globalFont;
-sf::Music bombSound, music, popSound;
+sf::Music bombSound, music, popSound, MainPopSound;
 sf::Texture textureArray[9];
 
 bool muteMusic = false, muteSfx = false;
@@ -27,7 +27,7 @@ bool loadSound(){
 
 
     
-    if(!music.openFromFile("assets/sound/CandyCrushMusic.mp3") || !bombSound.openFromFile("assets/sound/boom.mp3") || !popSound.openFromFile("assets/sound/pop.mp3")){
+    if(!music.openFromFile("assets/sound/CandyCrushMusic.mp3") || !bombSound.openFromFile("assets/sound/boom.mp3") || !popSound.openFromFile("assets/sound/pop.mp3") || !MainPopSound.openFromFile("assets/sound/candy_pop.mp3")){
         cout << "COuld not open audio file" << endl;
         return false;
 
@@ -37,6 +37,7 @@ bool loadSound(){
         music.setLooping(true);
         bombSound.setVolume(25.f);
         music.setVolume(20.f);
+        MainPopSound.setVolume(20.f);
         music.play();
     }   
     cout << "sound loaded";

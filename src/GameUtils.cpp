@@ -159,7 +159,8 @@ void rowCandyHandler(int grid[][8], int coord[]){
 
     int left = coord[1] - 0; // x val
     int right = ROWS - coord[1]; //x val
-    grid[coord[0]][coord[1]] = 8;    
+    grid[coord[0]][coord[1]] = 8;
+    opaqueGrid[coord[0]][coord[1]] = false;    
 
 
     if(left > 0){
@@ -193,7 +194,7 @@ void explodingCandyHandler(int grid[][8], int coord[]){
     int top = coord[0] -1; // y val
     int bottom = coord[0] + 1;
     grid[coord[0]][coord[1]] = 8;
-    opaqueGrid[coord[0]][coord[1]];
+    opaqueGrid[coord[0]][coord[1]] = false;
 
     if(left >= 0){
         grid[coord[0]][left] = 8;
@@ -471,6 +472,7 @@ void replaceRowAnimated(int rowNum, int range[], int grid[][8]){
     }
 
     isAnimating  = true;
+    MainPopSound.play();
 }
 
 // Replace a vertical match
@@ -508,6 +510,8 @@ void replaceColumnAnimated(int col, int range[], int grid[][8]){
     }
 
     isAnimating = true;
+    MainPopSound.play();
+
 
 }
 

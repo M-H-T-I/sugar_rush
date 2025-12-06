@@ -20,7 +20,7 @@ extern sf::Font globalFont;
 extern sf::Texture backgroundImageTexture; 
 extern bool userLevels[4];
 extern sf::Texture textureArray[9];
-extern sf::Music music, bombSound, popSound;
+extern sf::Music music, bombSound, popSound, MainPopSound;
 
 // determines if sound is muted
 extern bool muteMusic, muteSfx;

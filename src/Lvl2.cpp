@@ -31,7 +31,7 @@ bool initLevel2(){
 
     moves = 30;
     bool valid = true;
-    requiredScore = 3000;
+    requiredScore = 4000;
 
     // assign its grid values
     initGrid(grid, 8);
