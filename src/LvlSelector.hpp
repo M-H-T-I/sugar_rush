@@ -1,4 +1,5 @@
 /*THe logic fo rthe level selector screen*/
+#pragma once
 
 #include "common.hpp"
 

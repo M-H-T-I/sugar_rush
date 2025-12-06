@@ -5,6 +5,7 @@
 #include "Settings.hpp"
 #include "Lvl2.hpp"
 #include "Lvl3.hpp"
+#include "Tutorial.hpp"
 
 int main(){
 
@@ -54,11 +55,17 @@ int main(){
                         Lvl2ScreenInputHandling(window, index);
                     
                     }else if (index == 4){
-                        Lvl3ScreenInputHandling(window, index);
 
+                        Lvl3ScreenInputHandling(window, index);
+                    
+                    }else if(index == 5){
+
+                        tutorialScreenInputHandling(window, index);
 
                     }else if(index == 6){
+
                         SettingsScreenInputHandling(window, index);
+                        
                     }
 
                 }
@@ -92,7 +99,9 @@ int main(){
             
             }else if(index == 4){
                 drawLvl3Screen(window);
-
+            }else if(index == 5){
+                drawTutorialScreen(window);
+            
             }else if(index == 6){
                 drawSettingsScreen(window);
             }

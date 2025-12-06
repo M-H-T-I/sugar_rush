@@ -1,4 +1,5 @@
 // logic for title screen window
+#pragma once
 
 #include "common.hpp"
 

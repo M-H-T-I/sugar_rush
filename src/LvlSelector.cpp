@@ -2,6 +2,7 @@
 #include "Lvl1.hpp"
 #include "Lvl2.hpp"
 #include "Lvl3.hpp"
+#include "Tutorial.hpp"
 
 sf::Text titleTextLvlSelector(globalFont);
 sf::Text tutorialBtn(globalFont);
@@ -28,8 +29,8 @@ void drawLvlSelectorScreen(sf::RenderWindow& window){
 
 
     // tutorial button
-    tutorialBtn.setString("Tutorial");
-    tutorialBtn.setCharacterSize(30);
+    tutorialBtn.setString("[ Tutorial ]");
+    tutorialBtn.setCharacterSize(25);
     tutorialBtn.setFillColor(sf::Color::White);
 
     center = tutorialBtn.getLocalBounds().size / 2.f;
@@ -37,11 +38,11 @@ void drawLvlSelectorScreen(sf::RenderWindow& window){
 
     tutorialBtn.setPosition(sf::Vector2f{(prev), window.getSize().y / 2.f});
 
-    prev += tutorialBtn.getGlobalBounds().size.x + margin;
+    prev += tutorialBtn.getGlobalBounds().size.x + margin -10.f;
 
     // lvl1 button
-    lvl1Btn.setString("Level 1");
-    lvl1Btn.setCharacterSize(30);
+    lvl1Btn.setString("[ Level 1 ]");
+    lvl1Btn.setCharacterSize(25);
     lvl1Btn.setFillColor(sf::Color::White);
 
     center = lvl1Btn.getLocalBounds().size / 2.f;
@@ -54,8 +55,8 @@ void drawLvlSelectorScreen(sf::RenderWindow& window){
 
 
     // lvl2 button
-    lvl2Btn.setString("Level 2");
-    lvl2Btn.setCharacterSize(30);
+    lvl2Btn.setString("[ Level 2 ]");
+    lvl2Btn.setCharacterSize(25);
     lvl2Btn.setFillColor(sf::Color::White);
 
     center = lvl2Btn.getLocalBounds().size / 2.f;
@@ -68,8 +69,8 @@ void drawLvlSelectorScreen(sf::RenderWindow& window){
 
 
     // lvl3 button
-    lvl3Btn.setString("Level 3");
-    lvl3Btn.setCharacterSize(30);
+    lvl3Btn.setString("[ Level 3 ]");
+    lvl3Btn.setCharacterSize(25);
     lvl3Btn.setFillColor(sf::Color::White);
 
     center = lvl3Btn.getLocalBounds().size / 2.f;
@@ -81,14 +82,14 @@ void drawLvlSelectorScreen(sf::RenderWindow& window){
 
 
     // backbtn
-    backBtn.setString("back");
-    backBtn.setCharacterSize(25);
+    backBtn.setString("[ Go Back ]");
+    backBtn.setCharacterSize(20);
     backBtn.setFillColor(sf::Color::White);
 
     center = backBtn.getLocalBounds().size / 2.f;
     backBtn.setOrigin(center);
 
-    backBtn.setPosition(sf::Vector2f{30.f , 10.f});
+    backBtn.setPosition(sf::Vector2f{center.x , center.y + 10.f});
 
 
 
@@ -132,6 +133,7 @@ void lvlSelectorScreenInputHandling(sf::RenderWindow& window, int& index){
 
     }else if(tutorialBtn.getGlobalBounds().contains(mousePos)){
         index = 5;
+        initTutorial();
     }
 
 

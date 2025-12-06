@@ -1,4 +1,5 @@
 /*Level 1 ka logic sara*/
+#pragma once
 
 #include "common.hpp"
 #include "GameUtils.hpp"

@@ -1,5 +1,5 @@
 #include "common.hpp"
-#include "Lvl1.hpp"
+#include "Tutorial.hpp"
 
 // ----------------------------- NECESSARY DATA ----------------------------
 
@@ -7,6 +7,7 @@
 static bool selected = false;
 static int selectedCell[] = {-1, -1}; // unselected state is -1, -1
 
+static bool openGuide = false;
 // used to tell if game has started. Used in preparing the level
 
 static bool lvlEnd;
@@ -17,9 +18,9 @@ static int moves = 20, margin = 50;
 static bool mousePressedLastFrame = false;
 
 
-static sf::Text backBtnLvl1(globalFont);
-static sf::Text movesText(globalFont);
-static sf::Text scoreText(globalFont);
+static sf::Text backBtntutorial(globalFont);
+static sf::Text openGuideBtn(globalFont);
+sf::Text exitBtnGuide(globalFont);
 static sf::Sprite gridElement(textureArray[8]);
 static sf::Text exitBtn(globalFont);
 
@@ -28,8 +29,58 @@ static sf::RenderTexture gridRT({length, width});
 
 // ------------------ Functions---------------------------- 
 
+
+void drawGuide(sf::RenderWindow& window){
+
+    float prev = 10.f;
+
+    sf::Vector2f tempSize(window.getSize().x , static_cast<float>(window.getSize().y));
+
+    sf::RectangleShape rect(tempSize);
+    auto center =rect.getLocalBounds().size / 2.f;
+    rect.setOrigin(center);
+    rect.setPosition({(window.getSize().x / 2.f ), (window.getSize().y/2.f)});
+    rect.setFillColor(sf::Color::Black);
+
+    exitBtnGuide.setCharacterSize(20);
+    exitBtnGuide.setString("[ Close Guide ]");
+    center = exitBtnGuide.getLocalBounds().size / 2.f;
+    exitBtnGuide.setOrigin(center);
+    exitBtnGuide.setPosition({center.x , prev});
+
+    prev += margin + exitBtnGuide.getLocalBounds().size.y ;
+
+    sf::Text guideTitle(globalFont);
+    guideTitle.setString("Guide");
+    guideTitle.setCharacterSize(52.f);
+    center = guideTitle.getLocalBounds().size / 2.f;
+    guideTitle.setOrigin(center);
+    guideTitle.setPosition({center.x , prev});
+
+    prev += margin + guideTitle.getLocalBounds().size.y;
+
+    sf::Text txt(globalFont);
+    txt.setCharacterSize(22);            
+    txt.setStyle(sf::Text::Bold);
+    center = txt.getLocalBounds().size / 2.f;
+    txt.setFillColor(sf::Color::White);
+    txt.setOrigin(center);
+    txt.setString("3 candies: match \n4 candies: match and exploding bomb \n5 candies: match and row bomb \nObjective: get the required score in the other levels. \n( Tutorial is inifinite (; )");
+
+    txt.setPosition({(center.x + 10.f), prev});
+
+    
+    window.draw(rect);
+    window.draw(exitBtnGuide);
+    window.draw(guideTitle);
+    window.draw(txt);
+
+
+}
+
+
 // called before mainloop is initialized
-bool initLevel1(){
+bool initTutorial(){
 
     moves = 20;
     bool valid = true;
@@ -53,18 +104,17 @@ bool initLevel1(){
     cout << "initialized level 1" << endl;
 
     return valid;
-
 }
 
 
-void drawLvl1Screen(sf::RenderWindow& window){
+void drawTutorialScreen(sf::RenderWindow& window){
     
     float prev = 0.f;
 
 
     // title of the page
     sf::Text title(globalFont);
-    title.setString("Level 1");
+    title.setString("Tutorial");
     title.setCharacterSize(60);
     title.setFillColor(sf::Color(191, 78, 48)); 
 
@@ -74,6 +124,20 @@ void drawLvl1Screen(sf::RenderWindow& window){
     title.setPosition(sf::Vector2f{(window.getSize().x / 2.f), (center.y + margin)});
 
     prev += title.getLocalBounds().size.y + margin;
+
+
+    // guidebtn
+
+    openGuideBtn.setString("[ Open Guide ] ");
+    openGuideBtn.setCharacterSize(20);
+    openGuideBtn.setFillColor(sf::Color::White);
+
+    center = openGuideBtn.getLocalBounds().size / 2.f;
+    openGuideBtn.setOrigin(center);
+
+    openGuideBtn.setPosition(sf::Vector2f{center.x + 10.f , prev});
+
+    prev += openGuideBtn.getLocalBounds().size.y ;
 
     createGridTexture(grid, gridRT, spriteGrid);
 
@@ -86,60 +150,29 @@ void drawLvl1Screen(sf::RenderWindow& window){
 
     prev = margin;
 
-    // backBtnLvl1
-    backBtnLvl1.setString("back");
-    backBtnLvl1.setCharacterSize(25);
-    backBtnLvl1.setFillColor(sf::Color::White);
+    // backBtntutorial
+    backBtntutorial.setString("[ Go Back ]");
+    backBtntutorial.setCharacterSize(25);
+    backBtntutorial.setFillColor(sf::Color::White);
 
-    center = backBtnLvl1.getLocalBounds().size / 2.f;
-    backBtnLvl1.setOrigin(center);
+    center = backBtntutorial.getLocalBounds().size / 2.f;
+    backBtntutorial.setOrigin(center);
 
-    backBtnLvl1.setPosition(sf::Vector2f{50.f , 10.f});
+    backBtntutorial.setPosition(sf::Vector2f{center.x + 10.f , 10.f});
 
-    prev += backBtnLvl1.getLocalBounds().size.y + margin;
-
-    // moves
-    string movesString = "moves: " + std::to_string(moves);
-    movesText.setString(movesString);
-    movesText.setCharacterSize(25);
-    movesText.setFillColor(sf::Color::White);
-
-    center = movesText.getLocalBounds().size / 2.f;
-    movesText.setOrigin(center);
-
-    movesText.setPosition(sf::Vector2f{50.f , prev});
-
-    prev+=movesText.getLocalBounds().size.y + margin;
-
-    // score
-    string scoreString = "score: " + std::to_string(score) + " / " + std::to_string(requiredScore);
-    scoreText.setString(scoreString);
-    scoreText.setCharacterSize(25);
-    scoreText.setFillColor(sf::Color::White);
-
-    center = scoreText.getLocalBounds().size / 2.f;
-    scoreText.setOrigin(center);
-
-    scoreText.setPosition(sf::Vector2f{center.x , prev - 20.f});
+    prev += backBtntutorial.getLocalBounds().size.y + margin;    
+   
 
     window.draw(title);
-    window.draw(backBtnLvl1);
-    window.draw(movesText);
-    window.draw(scoreText);
+    window.draw(backBtntutorial);
+    window.draw(openGuideBtn);
     window.draw(gridElement);
 
-    if(isLvlEnd(score, requiredScore, moves)){
-        
-        if (score >= requiredScore){
+    if(openGuide){
 
-            drawWinScreen(window, exitBtn);
+        drawGuide(window);
 
-        }else{
-
-            drawLoseScreen(window, exitBtn);
-        }
     }
-
 }
 
 
@@ -207,7 +240,6 @@ static void inputHandleGrid(sf::Vector2f mousePos, sf::RenderWindow& window, int
                         
                         updateGrid(grid, ROWS);
 
-                        moves--;
 
                         
                     }
@@ -229,7 +261,7 @@ static void inputHandleGrid(sf::Vector2f mousePos, sf::RenderWindow& window, int
 }
 
 
-void Lvl1ScreenInputHandling(sf::RenderWindow& window, int& index){
+void tutorialScreenInputHandling(sf::RenderWindow& window, int& index){
 
     sf::Vector2i temp = sf::Mouse::getPosition(window);
 
@@ -248,17 +280,23 @@ void Lvl1ScreenInputHandling(sf::RenderWindow& window, int& index){
             return; 
         }
 
-    }else if(backBtnLvl1.getGlobalBounds().contains(mousePos)){
+    }else if(backBtntutorial.getGlobalBounds().contains(mousePos) && !openGuide){
         selected = false;
         index = 1; // save and exit option later
         return;
-    
+
+    }else if(openGuideBtn.getGlobalBounds().contains(mousePos)){
+
+        openGuide = true;
+
+    }else if(exitBtnGuide.getGlobalBounds().contains(mousePos)){
+        openGuide = false;
     }else {
 
         sf::Vector2f gridTopLeft = gridElement.getPosition() - gridElement.getOrigin();
         sf::Vector2f local = mousePos - gridTopLeft;
 
-        if(isInGrid(local, spriteGrid)){
+        if(isInGrid(local, spriteGrid) && !openGuide){
             inputHandleGrid(local, window, index);
 
         }
