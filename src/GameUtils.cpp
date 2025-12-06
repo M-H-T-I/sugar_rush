@@ -4,6 +4,16 @@ int COLS = 8, ROWS = 8; // constant
 unsigned int length = 400, width = 400;
 float cellSize = length / COLS;
 
+bool opaqueGrid[8][8]; // tells which cells need to be opaque
+
+// ----------- Grid INfo
+int grid[8][8];
+sf::Sprite* spriteGrid[8][8]; // will save all the sprites so I dont have to do any calculations
+
+
+bool isAnimating = false;
+
+// ---------------------------------------------------------- Functions ------------------------------- // 
 
 int generateRandom(){
 
@@ -22,6 +32,7 @@ void initGrid(int grid[][8], int rows){
             
             int n = generateRandom();
             grid[i][j] = n;
+            opaqueGrid[i][j] = true;
 
         }
 
@@ -40,75 +51,6 @@ void initSprites(sf::Sprite* spriteGrid[][8]){
 
 }
 
-// creates the inside of my grid
-void createGridTexture(int grid[][8], sf::RenderTexture& gridTexture, sf::Sprite* spriteGrid[][8]){
-
-    gridTexture.clear(sf::Color::White);
-
-    // using the grid array
-    for (int i = 0; i < ROWS; i++){
-
-        for (int j = 0; j < COLS; j++){
-
-            int textureNum;
-
-            switch (grid[i][j]){
-
-            case 1:
-                
-                textureNum = 0;
-                break;
-
-            case 2:
-
-                textureNum = 1;
-                break;
-
-            case 3:
-
-                textureNum = 2;
-                break;
-
-            case 4:
-
-                textureNum = 5;
-                break;
-
-            case 5: 
-                
-                textureNum = 4;
-                break;
-
-            case 6:
-
-                textureNum = 6;
-                break;
-            
-            case 7:
-
-                textureNum = 7;
-                break;
-
-            case 8:
-
-                textureNum = 8;
-                break;
-
-            };
-            
-            
-            sf::Sprite temp(textureArray[textureNum]);
-            temp.setScale({(cellSize / textureArray[textureNum].getSize().x), (cellSize / textureArray[textureNum].getSize().y)});
-            sf::Vector2f pos {(j*cellSize), (i*cellSize)}; // position vector for the new cell
-            temp.setPosition(pos);
-            *spriteGrid[i][j] = temp;
-            gridTexture.draw(temp);
-
-        }
-
-    }
-    gridTexture.display();
-}
 
 bool isInGrid(sf::Vector2f mousePos, sf::Sprite* spriteGrid[][8]) {
     for (int r = 0; r < ROWS; r++) {
@@ -438,14 +380,6 @@ bool isMoveValid(int grid[][8]){
 }
 
 
-
-// // Check if the grid has any valid moves
-// bool validMove(int grid[][COLS], int rows){
-//     return isMoveValid(grid, rows);
-// }
-
-
-
 // Assumes grid is a 2D array where 0 or -1 represents empty space
 void applyGravity(int grid[][8], int rows, int cols) {
     // Process each column from bottom to top
@@ -467,25 +401,241 @@ void applyGravity(int grid[][8], int rows, int cols) {
         }
     }
 }
+void prepareGrid(int grid[][8], int rows, int cols){
 
-
-// updates the grid after making a move
-void updateGrid(int grid[][8], int rows, bool isActive, int score){
-
-    prepareGrid(grid, rows, 8, isActive, score);
+    while(isMoveValid(grid)){
+        findAndReplaceMatches(grid);
+    }
+    applyGravity(grid, rows, 8);
+    populateGrid(grid, rows);
+    
 
 }
 
 
+// ---------------- animated functions
+// replace a row
+void replaceRowAnimated(int rowNum, int range[], int grid[][8]){
 
-void prepareGrid(int grid[][8], int rows, int cols, bool isActive, int score){
+    // different cases
+    int length = range[1] - range[0] + 1;
 
-    while(isMoveValid(grid)){
-        if(findAndReplaceMatches(grid) && isActive){
-            score+=10;
+    switch (length)
+    {
+    case 3:
+        
+        grid[rowNum][range[0]] = 8; // empty
+        opaqueGrid[rowNum][range[0]] = false;
+        break;
+    case 4:
+        
+        grid[rowNum][range[0]] = 6;
+        break;
+
+    default:
+        grid[rowNum][range[0]] = 7;
+        break;
+    } 
+
+    // rest become empty
+    for (int c = range[0] + 1; c <= range[1]; c++){
+
+        grid[rowNum][c] = 8;
+        opaqueGrid[rowNum][c] = false; // assigning empty space
+
+    }
+
+    isAnimating  = true;
+}
+
+// Replace a vertical match
+void replaceColumnAnimated(int col, int range[], int grid[][8]){
+    int length = range[1] - range[0] + 1;
+
+    if(length == 3){
+
+        opaqueGrid[range[0]][col] = false;
+        grid[range[0]][col] = 8;
+
+    }
+    else if(length == 4) grid[range[0]][col] = 6;
+    else grid[range[0]][col] = 7;
+
+    for(int r = range[0] + 1; r <= range[1]; r++) {
+
+        opaqueGrid[r][col] = false;
+        grid[r][col] = 8;
+
+
+    }
+
+    isAnimating = true;
+
+}
+
+
+// Scan the entire grid and replace all matches
+bool findAndReplaceMatchesAnimated(int grid[][8]){
+    bool found = false;
+    int range[2];
+
+    // Horizontal matches
+    for(int r = 0; r < ROWS; r++){
+        int c = 0;
+        while(c < COLS){
+            if(horizontalCheck(r, c, range, grid)){
+                replaceRowAnimated(r, range, grid);
+                found = true;
+                c = range[1] + 1;
+            } else c++;
         }
-        applyGravity(grid, rows, 8);
-        populateGrid(grid, rows);
+    }
+
+    // Vertical matches
+    for(int c = 0; c < COLS; c++){
+        int r = 0;
+        while(r < ROWS){
+            if(verticalCheck(r, c, range, grid)){
+
+                replaceColumnAnimated(c, range, grid);
+                found = true;
+                r = range[1] + 1;
+
+            } else {r++;}
+        }
+    }
+
+    return found;
+}
+
+// creates the inside of my grid
+void createGridTexture(int grid[][8], sf::RenderTexture& gridTexture, sf::Sprite* spriteGrid[][8]){
+
+    gridTexture.clear(sf::Color::White);
+
+    if (!isAnimating){
+
+        // using the grid array
+        for (int i = 0; i < ROWS; i++){
+
+            for (int j = 0; j < COLS; j++){
+
+                int textureNum;
+
+                // select texture
+                switch (grid[i][j]){
+
+                case 1:
+                    
+                    textureNum = 0;
+                    break;
+
+                case 2:
+
+                    textureNum = 1;
+                    break;
+
+                case 3:
+
+                    textureNum = 2;
+                    break;
+
+                case 4:
+
+                    textureNum = 5;
+                    break;
+
+                case 5: 
+                    
+                    textureNum = 4;
+                    break;
+
+                case 6:
+
+                    textureNum = 6;
+                    break;
+                
+                case 7:
+
+                    textureNum = 7;
+                    break;
+
+                case 8:
+
+                    textureNum = 8;
+                    break;
+
+                };
+                
+                
+                sf::Sprite temp(textureArray[textureNum]);
+                temp.setScale({(cellSize / textureArray[textureNum].getSize().x), (cellSize / textureArray[textureNum].getSize().y)});
+                sf::Vector2f pos {(j*cellSize), (i*cellSize)}; // position vector for the new cell
+                temp.setPosition(pos);
+                *spriteGrid[i][j] = temp;
+                gridTexture.draw(temp);
+
+            }
+
+        }
+
+    // animated
+    }else {
+
+        bool finished = true; // when animation will end;
+        
+        for (int r = 0; r < ROWS; r++){
+
+            for(int c = 0; c < COLS; c++){
+
+                if(opaqueGrid[r][c] == false){
+
+                    sf::Sprite* temp = spriteGrid[r][c];
+                    sf::Color tempColor = temp->getColor();
+
+                    if(tempColor.a > 0){
+
+                        tempColor.a = max(0, (tempColor.a - 1));
+                        temp->setColor(tempColor);
+
+                        finished = false;
+
+                    }else {
+
+                        opaqueGrid[r][c] = true;
+
+                    }
+
+                }
+
+                gridTexture.draw(*spriteGrid[r][c]);
+
+            }
+
+        }
+
+        if (finished){
+
+            isAnimating = false;
+
+        }
+
+    }
+
+    gridTexture.display();
+}
+
+
+// updates the grid after making a move
+void updateGrid(int grid[][8], int rows){
+
+    findAndReplaceMatchesAnimated(grid);
+
+    if(!isAnimating){
+
+        applyGravity(grid, ROWS, COLS);
+        populateGrid(grid, ROWS);
+
     }
 
 }

@@ -23,7 +23,7 @@ int main(){
     // main window
     sf::RenderWindow window(sf::VideoMode({800, 600}), "Sugar Rush", sf::Style::Default);
 
-   
+    
 
     // run the program as long as the window is open
     while (window.isOpen())

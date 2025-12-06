@@ -25,12 +25,6 @@ static sf::Text exitBtn(globalFont);
 
 static sf::RenderTexture gridRT({length, width});
 
-// ---------------------------------------- GRID INFO ----------------------------------//
-
-static int grid[8][8];
-static sf::Sprite* spriteGrid[8][8]; // will save all the sprites so I dont have to do any calculations
-
-
 
 // ------------------ Functions---------------------------- 
 
@@ -49,7 +43,7 @@ bool initLevel3(){
     initSprites(spriteGrid); // no chance for failure really (no exception needed)
 
     // removes any and all matches
-    prepareGrid(grid, ROWS, COLS, isActive, score);
+    prepareGrid(grid, ROWS, COLS);
 
     // level is active
     isActive = true;
@@ -63,7 +57,7 @@ bool initLevel3(){
 
 void drawLvl3Screen(sf::RenderWindow& window){
     
-    // updateGrid(grid, rows);
+    updateGrid(grid, ROWS);
 
     float prev = 0.f;
 
@@ -213,7 +207,7 @@ static void inputHandleGrid(sf::Vector2f mousePos, sf::RenderWindow& window, int
                     } 
                     else {
                         
-                        updateGrid(grid, ROWS, isActive, score);
+                        updateGrid(grid, ROWS);
 
                         moves--;
                         score += 20;

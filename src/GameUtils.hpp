@@ -12,6 +12,9 @@ extern unsigned int length, width;
 extern int COLS, ROWS;
 extern float cellSize;
 
+extern int grid[8][8];
+extern sf::Sprite* spriteGrid[8][8];
+extern bool opaqueGrid [8][8], isAnimating;
 
 // swaps cells using the indexes given
 void swapCells(int coord1[], int coord2[], int grid[][8]);
@@ -19,7 +22,7 @@ void swapCells(int coord1[], int coord2[], int grid[][8]);
 // called after shifting the array to fill empty slots
 void populateGrid(int grid[][8], int rows);
 
-void updateGrid(int grid[][8], int rows, bool isActive, int score);
+void updateGrid(int grid[][8], int rows);
 
 void makeMove(int grid[][8], int rows);
 
@@ -28,7 +31,7 @@ bool isMoveValid(int grid[][8]);
 bool findAndReplaceMatches(int grid[][8]);
 
 // removes any matches to be used after init grid and after every move
-void prepareGrid(int grid[][8], int rows, int cols, bool isActive, int score);
+void prepareGrid(int grid[][8], int rows, int cols);
 
 bool isWithin1(int grid[][8], int first[2], int second[2]);
 
@@ -49,4 +52,6 @@ bool isInGrid(sf::Vector2f mousePos, sf::Sprite* spriteGrid[][8]);
 void initSprites(sf::Sprite* spriteGrid[][8]);
 
 void createGridTexture(int grid[][8], sf::RenderTexture& gridTexture, sf::Sprite* spriteGrid[][8]);
+
+
 #endif
