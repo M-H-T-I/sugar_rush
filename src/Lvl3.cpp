@@ -7,6 +7,8 @@ static bool selected = false;
 static int selectedCell[] = {-1, -1}; // unselected state is -1, -1
 
 
+static string path = "src/save-data/lvl3.txt";
+
 static bool lvlEnd;
 // imp data
 static int moves = 20, margin = 50; 
@@ -20,6 +22,8 @@ static sf::Text movesText(globalFont);
 static sf::Text scoreText(globalFont);
 static sf::Sprite gridElement(textureArray[8]);
 static sf::Text exitBtn(globalFont);
+static sf::Text saveAndExitBtn(globalFont);
+
 
 static sf::RenderTexture gridRT({length, width});
 
@@ -29,14 +33,17 @@ static sf::RenderTexture gridRT({length, width});
 // called before mainloop is initialized
 bool initLevel3(){
 
-    moves = 35;
+    moves = 40;
     score = 0;
     bool valid = true;
 
-    requiredScore = 4500;
+    requiredScore = 5500;
 
-    // assign its grid values
-    initGrid(grid, 8);
+    if(!readSaveFile(path, grid, score, moves)){
+        
+        initGrid(grid, 8);
+
+    }
 
     initSprites(spriteGrid); // no chance for failure really (no exception needed)
 
@@ -47,7 +54,6 @@ bool initLevel3(){
     isActive = true;
     lvlEnd = false;
 
-    score = 0;
     cout << "initialized level 3" << endl;
 
     return valid;
@@ -95,7 +101,21 @@ void drawLvl3Screen(sf::RenderWindow& window){
 
     backBtnlvl3.setPosition(sf::Vector2f{50.f , 10.f});
 
-    prev += backBtnlvl3.getLocalBounds().size.y + margin;
+    prev += backBtnlvl3.getLocalBounds().size.y ;
+
+
+    // save btn
+    saveAndExitBtn.setString("[ Save ]");
+    saveAndExitBtn.setCharacterSize(18);
+    saveAndExitBtn.setFillColor(sf::Color::White);
+    
+    center = saveAndExitBtn.getLocalBounds().size / 2.f;
+    saveAndExitBtn.setOrigin(center);
+
+    saveAndExitBtn.setPosition(sf::Vector2f{center.x , center.y + prev});
+
+    prev += saveAndExitBtn.getLocalBounds().size.y + 30;
+
 
     // moves
     string movesString = "moves: " + std::to_string(moves);
@@ -123,11 +143,14 @@ void drawLvl3Screen(sf::RenderWindow& window){
 
     window.draw(title);
     window.draw(backBtnlvl3);
+    window.draw(saveAndExitBtn);
     window.draw(movesText);
     window.draw(scoreText);
     window.draw(gridElement);
 
     if(isLvlEnd(score, requiredScore, moves)){
+
+        deleteSave(path);
         
         if (score >= requiredScore){
 
@@ -252,6 +275,11 @@ void Lvl3ScreenInputHandling(sf::RenderWindow& window, int& index){
         index = 1; // save and exit option later
         return;
     
+    }else if(saveAndExitBtn.getGlobalBounds().contains(mousePos)){
+        
+        writeSave(path, grid, score, moves);
+    
+
     }else {
 
         sf::Vector2f gridTopLeft = gridElement.getPosition() - gridElement.getOrigin();

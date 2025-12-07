@@ -2,7 +2,6 @@
 #include <cmath>
 
 sf::Text titleText(globalFont);
-sf::Text newUserText(globalFont);
 sf::Text playText(globalFont);
 sf::Text settingsText(globalFont);
 
@@ -22,18 +21,6 @@ void drawTitleScreen(sf::RenderWindow& window){
     titleText.setPosition(sf::Vector2f{(window.getSize().x / 2.f), (center.y)});
 
     prev += titleText.getLocalBounds().size.y;
-
-    // New User button
-    newUserText.setString("New User");
-    newUserText.setCharacterSize(30);
-    newUserText.setFillColor(sf::Color::White);
-
-    // center play button:
-    center = newUserText.getLocalBounds().size / 2.f;
-    newUserText.setOrigin(center);
-    newUserText.setPosition(sf::Vector2f{(window.getSize().x / 2.f), ( margin + prev)});
-
-    prev += newUserText.getLocalBounds().size.y + margin;
 
 
 
@@ -66,7 +53,6 @@ void drawTitleScreen(sf::RenderWindow& window){
 
     window.clear(sf::Color(60, 176, 205));
     window.draw(titleText);
-    window.draw(newUserText);
     window.draw(playText);
     window.draw(settingsText);
 
@@ -84,8 +70,6 @@ void titleScreenInputHandling(sf::RenderWindow& window, int& index){
         index = 1;
     }else if(settingsText.getGlobalBounds().contains(mousePos)){
         index = 6;
-    }else if(newUserText.getGlobalBounds().contains(mousePos)){
-        index = 1; // still maps to level screen for now
     }
 
 
