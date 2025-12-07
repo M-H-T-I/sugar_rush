@@ -97,7 +97,13 @@ void SettingsScreenInputHandling(sf::RenderWindow& window, int& index){
         }
 
 
-    }// add support for delete save later
+    }else if(deleteSaveBtn.getGlobalBounds().contains(mousePos)){
+
+        deleteSave("src/save-data/lvl1.txt");
+        deleteSave("src/save-data/lvl2.txt");
+        deleteSave("src/save-data/lvl3.txt");
+
+    }
 
 
 }
