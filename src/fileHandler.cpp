@@ -3,70 +3,105 @@
 #include <fstream>
 #include <filesystem>
 
-bool createUser(){
-
-    ofstream file("src/save-data/user-info.txt");
-
-    if(file.is_open()){
-
-        file << "tutorial: " << false << endl;
-        file << "1: " << false << endl;
-        file << "2: " << false << endl;
-        file << "3: " << false << endl;
-
-        file.close();
-
-        return true;
-
-    }else {
-        cout << "Error: could not open file for writing." << endl;
-        return false;
-    }
-
-
+bool isNumeric(char character){
+    return character >= '0' && character <= '9';
 }
 
-bool deleteUser(){
+bool readFile(string path, int store[][8], int& score, int& moves){
 
-    if (filesystem::remove("src/save-data/user-info.txt")){
-
-        cout << "File deleted successfully." << endl;
-        return true;
-
-    }else {
-
-        cout << "File could not be found." << endl;
-        return false;
-
-    }    
-
-}
-
-bool fetchUserData(string levelStatus[]){
-
-    // opening file
-    ifstream file("src/save-data/user-info.txt");
+    ifstream file(path);
+    
 
     if (!file.is_open()){
 
-        cout << "Could not open file reading." << endl;
+        cout << "Error: File did not open for read." << endl;
         return false;
 
-    }else {
 
-        string temp;
-        int i = 0;
+    }else{
 
-        while(getline(file, temp)){
+        string temp = "";
 
-            size_t pos = temp.find(": ");
-            levelStatus[i] = (temp.substr(pos+2));
-            i++;
+        if (!getline(file, temp)) return false;
+
+        for (int r = 0; r < 8; r++){
+
+            int i = 0;
+            getline(file, temp);
+            cout << temp << endl;
+
+            for(int c = 0; c < 8; c++){
+
+                while (!isNumeric(temp[i])) i++;
+                store[r][c] = temp[i] - '0';
+                i++;
+                
+            }
 
         }
 
-        return true;
+        // reading score
+        getline(file, temp);
+        int coloPos = temp.find(':');
+        string scoreStr = temp.substr(coloPos + 1);
+        int value = stoi(scoreStr);
+        score = value;
 
+        // reading moves
+        getline(file, temp);
+        int colPos = temp.find(':');
+        string movesStr = temp.substr(colPos + 1);
+        value = stoi(movesStr);
+
+        moves = value;        
+
+        return true;
+    }   
+
+
+}
+
+bool writeSave(string path, int grid[][2], int score, int moves){
+
+    ofstream wfile(path);
+
+    if(!wfile.is_open()){
+    
+        cout << "Error: Could not open file for write." << endl; 
+        return false;
+
+    }else{
+
+        // first the grid
+        for (int r = 0; r < 2; r++){
+
+            wfile << '[';
+            for (int c = 0; c < 2-1; c++){
+
+                wfile << grid[r][c] << ",";
+
+            }   
+
+            wfile << grid[r][1];
+
+            wfile <<']' << endl;
+
+        }
+
+        //score
+        wfile << "score:" << score << endl;
+
+        //moves;
+        wfile << "moves:" << moves << endl;
+
+        wfile.close();
+
+        return true;
     }
 
+    
+}
+
+bool deleteSave(const string path){
+    return filesystem::remove(path);
 }
