@@ -29,6 +29,7 @@ target_sources(main
         src/GameUtils.cpp
         src/Settings.cpp
         src/Tutorial.cpp
+        src/fileHandler.cpp
 )
 
 target_link_libraries(main SFML::Graphics SFML::Window SFML::Audio)

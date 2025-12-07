@@ -11,6 +11,7 @@ in our game.*/
 #include <string>
 #include <cstdlib>
 #include <ctime> 
+#include "fileHandler.hpp"
 
 using namespace std;
 

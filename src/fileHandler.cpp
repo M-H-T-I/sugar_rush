@@ -1,5 +1,4 @@
 #include "fileHandler.hpp"
-#include "common.hpp"
 #include <fstream>
 #include <filesystem>
 
@@ -7,7 +6,7 @@ bool isNumeric(char character){
     return character >= '0' && character <= '9';
 }
 
-bool readFile(string path, int store[][8], int& score, int& moves){
+bool readSaveFile(string path, int store[][8], int& score, int& moves){
 
     ifstream file(path);
     
@@ -22,18 +21,17 @@ bool readFile(string path, int store[][8], int& score, int& moves){
 
         string temp = "";
 
-        if (!getline(file, temp)) return false;
-
         for (int r = 0; r < 8; r++){
 
             int i = 0;
             getline(file, temp);
-            cout << temp << endl;
+
+            if(temp == "") return false;
 
             for(int c = 0; c < 8; c++){
 
-                while (!isNumeric(temp[i])) i++;
-                store[r][c] = temp[i] - '0';
+                while ( i < temp.length() && !isNumeric(temp[i])) i++;
+                store[r][c] = (temp[i]) - '0';
                 i++;
                 
             }
@@ -61,7 +59,7 @@ bool readFile(string path, int store[][8], int& score, int& moves){
 
 }
 
-bool writeSave(string path, int grid[][2], int score, int moves){
+bool writeSave(string path, int grid[][8], int score, int moves){
 
     ofstream wfile(path);
 
@@ -73,10 +71,10 @@ bool writeSave(string path, int grid[][2], int score, int moves){
     }else{
 
         // first the grid
-        for (int r = 0; r < 2; r++){
+        for (int r = 0; r < 8; r++){
 
             wfile << '[';
-            for (int c = 0; c < 2-1; c++){
+            for (int c = 0; c < 8-1; c++){
 
                 wfile << grid[r][c] << ",";
 
