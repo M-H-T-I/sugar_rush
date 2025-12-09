@@ -92,6 +92,8 @@ bool writeSave(string path, int grid[][8], int score, int moves){
         //moves;
         wfile << "moves:" << moves << endl;
 
+        cout<<"Files saved successfully!";
+
         wfile.close();
 
         return true;
@@ -101,5 +103,6 @@ bool writeSave(string path, int grid[][8], int score, int moves){
 }
 
 bool deleteSave(const string path){
+    cout<<"File deleted!";
     return filesystem::remove(path);
 }
