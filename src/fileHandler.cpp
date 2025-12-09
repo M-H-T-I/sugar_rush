@@ -65,7 +65,8 @@ bool writeSave(string path, int grid[][8], int score, int moves){
 
     if(!wfile.is_open()){
     
-        cout << "Error: Could not open file for write." << endl; 
+        cout << "Error: Could not open file for write." << endl;
+        cout << "Path does not exist" << endl; 
         return false;
 
     }else{
@@ -92,7 +93,7 @@ bool writeSave(string path, int grid[][8], int score, int moves){
         //moves;
         wfile << "moves:" << moves << endl;
 
-        cout<<"Files saved successfully!";
+        cout<<"Files saved successfully!" << endl;
 
         wfile.close();
 
@@ -103,6 +104,6 @@ bool writeSave(string path, int grid[][8], int score, int moves){
 }
 
 bool deleteSave(const string path){
-    cout<<"File deleted!";
+    cout<<"File deleted!" << endl;
     return filesystem::remove(path);
 }
