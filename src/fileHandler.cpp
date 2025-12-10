@@ -20,38 +20,7 @@ bool readSaveFile(string path, int store[][8], int& score, int& moves){
     }else{
 
         string temp = "";
-
-            // ---------- READ GRID ----------
-    int r = 0;
-
-    if (!getline(file, temp) || temp.empty()) return false;
-
-    while (!temp.empty() && temp[0] == '[') {
-
-        if (r >= 8) return false;  // too many rows
-
-        int c = 0;
-        int i = 0;
-
-        while (i < (int)temp.size() && temp[i] != ']') {
-
-            // skipPING sara non-digits
-            while (i < (int)temp.size() && !isdigit(temp[i])) i++;
-            if (i >= (int)temp.size() || temp[i] == ']') break;
-
-            if (c >= 8) return false; // too many columns
-
-            store[r][c] = temp[i] - '0';
-            i++;
-            c++;
-        }
-
-        if (c != 8) return false; // not enough columns
-
-        r++;
-
-        if (!getline(file, temp) || temp.empty()) return false;
-
+        
         for (int r = 0; r < 8; r++){
             int i = 0;
             getline(file, temp);
@@ -73,30 +42,15 @@ bool readSaveFile(string path, int store[][8], int& score, int& moves){
                 i++;
                 
             }
- 
-        }
+           
 
-        if (r != 8) return false; // not 8 rows
+        }
 
         // reading score
-        if(!getline(file, temp)) return false;
-        if(temp.empty()) return false;
-        
+        getline(file, temp);
         int coloPos = temp.find(':');
-        if (coloPos == -1) return false; // 
-        string scoreStr = temp.substr(coloPos + 1);
-
-            // validate scoreStr contains only digits
-        if (scoreStr.empty()) return false;
-
-        for (char ch : scoreStr) {
-            if (!isNumeric(ch)) return false;
-        }
-
-
-
         if(coloPos!=5)return false;
-        scoreStr = temp.substr(coloPos + 1);
+        string scoreStr = temp.substr(coloPos + 1);
         for(char ch : scoreStr){
             if(!isdigit(ch)) return false;
         }
@@ -106,19 +60,6 @@ bool readSaveFile(string path, int store[][8], int& score, int& moves){
         // reading moves
         getline(file, temp);
         int colPos = temp.find(':');
-
-        if (colPos == -1) return false;
-        string movesStr = temp.substr(colPos + 1);
-
-        if(movesStr.empty())return false;
-        for(char ch: movesStr){
-
-            if(!isNumeric(ch)){
-                return false;
-            }
-
-        }
-
         
         if(coloPos!=5)return false;
         string movesStr = temp.substr(colPos + 1);
@@ -128,7 +69,6 @@ bool readSaveFile(string path, int store[][8], int& score, int& moves){
         moves = value;        
 
         return true;
-        
     }   
 
 
