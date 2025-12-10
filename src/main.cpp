@@ -30,7 +30,7 @@ int main(){
 
     initRandom(); // initializing seed
 
-    int index = 0;
+    index = 0;
 
 
     // main window

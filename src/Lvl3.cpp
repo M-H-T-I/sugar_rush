@@ -7,7 +7,6 @@ static bool selected = false;
 static int selectedCell[] = {-1, -1}; // unselected state is -1, -1
 
 
-static string path = "src/save-data/lvl3.txt";
 
 static bool lvlEnd;
 // imp data
@@ -39,7 +38,7 @@ bool initLevel3(){
 
     requiredScore = 5500;
 
-    if(!readSaveFile(path, grid, score, moves)){
+    if(!readSaveFile(path, grid, score, moves, 3)){
         
         initGrid(grid, 8);
 

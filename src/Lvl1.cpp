@@ -7,7 +7,6 @@
 static bool selected = false;
 static int selectedCell[] = {-1, -1}; // unselected state is -1, -1
 
-static string path = "src/save-data/lvl1.txt";
 // used to tell if game has started. Used in preparing the level
 
 static bool lvlEnd;
@@ -42,8 +41,7 @@ bool initLevel1(){
 
     // assign its grid values
 
-    if(!readSaveFile(path, grid, score, moves)){
-
+    if(!readSaveFile(path, grid, score, moves, 1)){
         initGrid(grid, 8);
         
     }
@@ -192,13 +190,6 @@ static void inputHandleGrid(sf::Vector2f mousePos, sf::RenderWindow& window, int
                         moves--;
                         return;
                         
-                    }else if(grid[r][c] == 7){
-
-                        int coords[] = {r,c};
-                        rowCandyHandler(grid, coords);
-                        moves--;
-                        return;
-
                     }
 
                     selected = true;
@@ -215,6 +206,14 @@ static void inputHandleGrid(sf::Vector2f mousePos, sf::RenderWindow& window, int
 
                 // swap attempt
                 swapCells(cell, selectedCell, grid);
+
+                if(grid[selectedCell[0]][selectedCell[1]] == 7){
+                    rowCandyHandler(grid, selectedCell);
+                }else if(grid[cell[0]][cell[1]] == 7){
+                    rowCandyHandler(grid,cell);
+
+                }
+
                 cout << grid[r][c];
 
                 createGridTexture(grid, gridRT,spriteGrid);

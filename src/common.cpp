@@ -1,10 +1,13 @@
 #include "common.hpp"
 
+int index = 0;
 
 sf::Texture backgroundImageTexture;
 sf::Font globalFont;
 sf::Music bombSound, music, popSound, MainPopSound;
 sf::Texture textureArray[9];
+
+string path = "src/save-data/lvl.txt";
 
 bool muteMusic = false, muteSfx = false;
 

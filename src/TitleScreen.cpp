@@ -1,9 +1,15 @@
 #include "TitleScreen.hpp"
 #include <cmath>
+#include "Lvl1.hpp"
+#include "Lvl2.hpp"
+#include "Lvl3.hpp"
 
 sf::Text titleText(globalFont);
 sf::Text playText(globalFont);
 sf::Text settingsText(globalFont);
+sf::Text loadBtn(globalFont);
+
+bool showError = false;
 
 void drawTitleScreen(sf::RenderWindow& window){
 
@@ -49,12 +55,41 @@ void drawTitleScreen(sf::RenderWindow& window){
     prev += settingsText.getLocalBounds().size.y + margin;
 
 
+    // settings
+    loadBtn.setString("Load Save");
+    loadBtn.setCharacterSize(30);
+    loadBtn.setFillColor(sf::Color::White);
+
+    // center settings button:
+    center = loadBtn.getLocalBounds().size / 2.f;
+    loadBtn.setOrigin(center);
+    loadBtn.setPosition(sf::Vector2f{(window.getSize().x / 2.f), ( margin + prev)});
+
+    prev += loadBtn.getLocalBounds().size.y + margin;
+
+
+    // ERROR TEXT 
+    sf::Text errorText(globalFont);
+    errorText.setString("NO save file found!");
+    errorText.setCharacterSize(20);
+    errorText.setFillColor(sf::Color::White);
+
+    // center settings button:
+    center = errorText.getLocalBounds().size / 2.f;
+    errorText.setOrigin(center);
+    errorText.setPosition(sf::Vector2f{(window.getSize().x / 2.f), ( margin + prev)});
+
+    prev += errorText.getLocalBounds().size.y + margin;
+
+
 
 
     window.clear(sf::Color(60, 176, 205));
     window.draw(titleText);
     window.draw(playText);
     window.draw(settingsText);
+    window.draw(loadBtn);
+    if(showError == true) window.draw(errorText);
 
 }
 
@@ -70,7 +105,20 @@ void titleScreenInputHandling(sf::RenderWindow& window, int& index){
         index = 1;
     }else if(settingsText.getGlobalBounds().contains(mousePos)){
         index = 6;
-    }
+    }else if(loadBtn.getGlobalBounds().contains(mousePos)){
+
+        if(!readLevel(index)){
+            showError = true;
+        }else if(index == 2){
+            initLevel1();
+        }else if(index == 3){
+            initLevel2();
+        }else if(index == 4){
+            initLevel3();
+        }else {
+            index = 0;
+        }
+    }   
 
 
 }

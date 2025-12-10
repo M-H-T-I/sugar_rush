@@ -17,6 +17,10 @@ using namespace std;
 
 extern string states[7];
 
+extern int index;
+
+extern string path;
+
 extern sf::Font globalFont;
 extern sf::Texture backgroundImageTexture; 
 extern bool userLevels[4];

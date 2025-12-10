@@ -6,7 +6,7 @@ bool isNumeric(char character){
     return character >= '0' && character <= '9';
 }
 
-bool readSaveFile(string path, int store[][8], int& score, int& moves){
+bool readSaveFile(string path, int store[][8], int& score, int& moves, int level){
 
     ifstream file(path);
     
@@ -21,6 +21,15 @@ bool readSaveFile(string path, int store[][8], int& score, int& moves){
 
         string temp = "";
         
+        getline(file, temp);
+
+        if(!isdigit(temp[0]) || !((index - 1) == (int)temp[0] - '0')){
+            return false;
+        }
+
+        cout << index -1 << endl;
+        cout << temp[0] << endl;
+
         for (int r = 0; r < 8; r++){
             int i = 0;
             getline(file, temp);
@@ -86,6 +95,9 @@ bool writeSave(string path, int grid[][8], int score, int moves){
         return false;
 
     }else{
+
+
+        wfile << index - 1 << endl;
 
         // first the grid
         for (int r = 0; r < 8; r++){
@@ -167,4 +179,46 @@ bool readmute(bool& muteMusic){
         }
         return true;
     }
+}
+
+bool readLevel(int& index){
+
+
+    ifstream file(path);
+
+    if(!file.is_open()){
+
+        cout << "error cold not open file" << endl;
+        return false;
+
+    }else {
+        string level = "";
+        
+        if(!getline(file, level) || !isdigit(level[0])){
+            return false;
+        }
+
+        switch ((int)(level[0] -'0'))
+        {
+        case 1:
+            index = 2;
+            break;
+
+        case 2:
+            index = 3;
+            break;
+
+        case 3:
+            index = 4;
+            break;
+
+        default:
+            return false;
+            break;
+        }
+
+        return true;
+
+    }
+
 }
