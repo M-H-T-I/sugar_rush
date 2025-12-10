@@ -21,39 +21,81 @@ bool readSaveFile(string path, int store[][8], int& score, int& moves){
 
         string temp = "";
 
-        for (int r = 0; r < 8; r++){
+            // ---------- READ GRID ----------
+    int r = 0;
 
-            int i = 0;
-            getline(file, temp);
+    if (!getline(file, temp) || temp.empty()) return false;
 
-            if(temp == "") return false;
+    while (!temp.empty() && temp[0] == '[') {
 
-            for(int c = 0; c < 8; c++){
+        if (r >= 8) return false;  // too many rows
 
-                while ( i < temp.length() && !isNumeric(temp[i])) i++;
-                store[r][c] = (temp[i]) - '0';
-                i++;
-                
-            }
+        int c = 0;
+        int i = 0;
+
+        while (i < (int)temp.size() && temp[i] != ']') {
+
+            // skipPING sara non-digits
+            while (i < (int)temp.size() && !isdigit(temp[i])) i++;
+            if (i >= (int)temp.size() || temp[i] == ']') break;
+
+            if (c >= 8) return false; // too many columns
+
+            store[r][c] = temp[i] - '0';
+            i++;
+            c++;
+        }
+
+        if (c != 8) return false; // not enough columns
+
+        r++;
+
+        if (!getline(file, temp) || temp.empty()) return false;
 
         }
 
+        if (r != 8) return false; // not 8 rows
+
         // reading score
-        getline(file, temp);
+        if(!getline(file, temp)) return false;
+        if(temp.empty()) return false;
+        
         int coloPos = temp.find(':');
+        if (coloPos == -1) return false; // 
         string scoreStr = temp.substr(coloPos + 1);
+
+            // validate scoreStr contains only digits
+        if (scoreStr.empty()) return false;
+
+        for (char ch : scoreStr) {
+            if (!isNumeric(ch)) return false;
+        }
+
+
         int value = stoi(scoreStr);
         score = value;
 
         // reading moves
         getline(file, temp);
         int colPos = temp.find(':');
+        if (colPos == -1) return false;
         string movesStr = temp.substr(colPos + 1);
+
+        if(movesStr.empty())return false;
+        for(char ch: movesStr){
+
+            if(!isNumeric(ch)){
+                return false;
+            }
+
+        }
+
         value = stoi(movesStr);
 
         moves = value;        
 
         return true;
+        
     }   
 
 
