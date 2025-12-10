@@ -20,6 +20,7 @@ bool readSaveFile(string path, int store[][8], int& score, int& moves){
     }else{
 
         string temp = "";
+<<<<<<< HEAD
 
             // ---------- READ GRID ----------
     int r = 0;
@@ -51,6 +52,31 @@ bool readSaveFile(string path, int store[][8], int& score, int& moves){
         r++;
 
         if (!getline(file, temp) || temp.empty()) return false;
+=======
+        
+        for (int r = 0; r < 8; r++){
+            int i = 0;
+            getline(file, temp);
+            char bracket=temp[0];
+            int lengthoftemp=temp.length();
+            if(lengthoftemp!=17)return false;
+            if(temp == "") return false;
+            int num=0;
+            for(int c = 0; c < 8; c++){
+                
+                while ( i < temp.length() && !isNumeric(temp[i])) i++;
+                
+                if(num<c){
+                    store[r][c]=rand()%5+1;
+                }
+                else{
+                    store[r][c] = (temp[i]) - '0';
+                }
+                i++;
+                
+            }
+           
+>>>>>>> f378102 (add excption handling)
 
         }
 
@@ -61,6 +87,7 @@ bool readSaveFile(string path, int store[][8], int& score, int& moves){
         if(temp.empty()) return false;
         
         int coloPos = temp.find(':');
+<<<<<<< HEAD
         if (coloPos == -1) return false; // 
         string scoreStr = temp.substr(coloPos + 1);
 
@@ -72,12 +99,20 @@ bool readSaveFile(string path, int store[][8], int& score, int& moves){
         }
 
 
+=======
+        if(coloPos!=5)return false;
+        string scoreStr = temp.substr(coloPos + 1);
+        for(char ch : scoreStr){
+            if(!isdigit(ch)) return false;
+        }
+>>>>>>> f378102 (add excption handling)
         int value = stoi(scoreStr);
         score = value;
 
         // reading moves
         getline(file, temp);
         int colPos = temp.find(':');
+<<<<<<< HEAD
         if (colPos == -1) return false;
         string movesStr = temp.substr(colPos + 1);
 
@@ -90,10 +125,15 @@ bool readSaveFile(string path, int store[][8], int& score, int& moves){
 
         }
 
+=======
+        
+        if(coloPos!=5)return false;
+        string movesStr = temp.substr(colPos + 1);
+        
+>>>>>>> f378102 (add excption handling)
         value = stoi(movesStr);
 
         moves = value;        
-        //
 
         return true;
         
@@ -106,10 +146,9 @@ bool writeSave(string path, int grid[][8], int score, int moves){
 
     ofstream wfile(path);
 
-    if(!wfile.is_open()){
+    if(!(wfile.is_open())){
     
-        cout << "Error: Could not open file for write." << endl;
-        cout << "Path does not exist" << endl; 
+        cout << "Error: Could not open file for write." << endl; 
         return false;
 
     }else{
@@ -136,7 +175,7 @@ bool writeSave(string path, int grid[][8], int score, int moves){
         //moves;
         wfile << "moves:" << moves << endl;
 
-        cout<<"Files saved successfully!" << endl;
+        std::cout<<"Files saved successfully!";
 
         wfile.close();
 
@@ -147,6 +186,6 @@ bool writeSave(string path, int grid[][8], int score, int moves){
 }
 
 bool deleteSave(const string path){
-    cout<<"File deleted!" << endl;
+    std::cout<<"File deleted!";
     return filesystem::remove(path);
 }

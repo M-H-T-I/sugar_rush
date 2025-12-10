@@ -26,8 +26,6 @@ int main(){
 
     window.setFramerateLimit(80);
 
-    //checking
-
     // run the program as long as the window is open
     while (window.isOpen())
     {
