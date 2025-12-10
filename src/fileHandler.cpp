@@ -93,6 +93,7 @@ bool readSaveFile(string path, int store[][8], int& score, int& moves){
         value = stoi(movesStr);
 
         moves = value;        
+        //
 
         return true;
         
