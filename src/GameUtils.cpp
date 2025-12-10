@@ -191,7 +191,7 @@ void rowCandyHandler(int grid[][8], int coord[]){
 void explodingCandyHandlerRows(int grid[][8], int range[], int row){
 
 
-    for (int c = range[0]; c < range[1];c++){
+    for (int c = range[0]; c <= range[1];c++){
 
         int left = c - 1; // x val
         int right = c + 1; //x val
@@ -274,7 +274,7 @@ void explodingCandyHandlerRows(int grid[][8], int range[], int row){
 void explodingCandyHandlerCols(int grid[][8], int range[], int col){
 
 
-    for (int r = range[0]; r < range[1];r++){
+    for (int r = range[0]; r <= range[1];r++){
 
         int left = col - 1; // x val
         int right = col + 1; //x val

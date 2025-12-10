@@ -10,3 +10,4 @@ bool writeSave(string path, int grid[][8], int score, int moves);
 bool readmute(bool& mutemusic);
 bool savemute(bool muteMusic);
 bool readLevel(int& index);
+bool checkValidity();

@@ -103,12 +103,20 @@ void titleScreenInputHandling(sf::RenderWindow& window, int& index){
 
     if(playText.getGlobalBounds().contains(mousePos)){
         index = 1;
+        showError = false;
     }else if(settingsText.getGlobalBounds().contains(mousePos)){
         index = 6;
+        showError = false;
     }else if(loadBtn.getGlobalBounds().contains(mousePos)){
 
         if(!readLevel(index)){
             showError = true;
+
+        }else if(!checkValidity()){
+
+            showError = true;
+            index = 0;
+        
         }else if(index == 2){
             initLevel1();
         }else if(index == 3){

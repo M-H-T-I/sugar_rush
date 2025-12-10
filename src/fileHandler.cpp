@@ -222,3 +222,77 @@ bool readLevel(int& index){
     }
 
 }
+
+bool checkValidity(){
+
+    ifstream file(path);
+    
+
+    if (!file.is_open()){
+
+        cout << "Error: File did not open for read." << endl;
+        return false;
+
+
+    }else{
+
+        string temp = "";
+        
+        getline(file, temp);
+
+        if(!isdigit(temp[0]) || !((index - 1) == (int)temp[0] - '0')){
+            return false;
+        }
+
+        for (int r = 0; r < 8; r++){
+            int i = 0;
+            getline(file, temp);
+            char bracket=temp[0];
+            int lengthoftemp=temp.length();
+            if(lengthoftemp!=17)return false;
+            if(temp == "") return false;
+            int num=0;
+            for(int c = 0; c < 8; c++){
+                
+                while ( i < temp.length() && !isNumeric(temp[i])) i++;
+                
+                // if(num<c){
+                //     store[r][c]=rand()%5+1;
+                // }
+                    
+                // else{
+                //     store[r][c] = (temp[i]) - '0';
+                // }
+                num++;
+                i++;
+                
+            }
+           
+
+        }
+
+        // reading score
+        getline(file, temp);
+        int coloPos = temp.find(':');
+        if(coloPos!=5)return false;
+        string scoreStr = temp.substr(coloPos + 1);
+        for(char ch : scoreStr){
+            if(!isdigit(ch)) return false;
+        }
+        // int value = stoi(scoreStr);
+        // score = value;
+
+        // reading moves
+        getline(file, temp);
+        int colPos = temp.find(':');
+        
+        if(coloPos!=5)return false;
+        string movesStr = temp.substr(colPos + 1);
+        
+        // value = stoi(movesStr);
+
+        // moves = value;        
+
+        return true;
+    }   
+}
