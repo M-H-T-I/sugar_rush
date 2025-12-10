@@ -20,7 +20,6 @@ bool readSaveFile(string path, int store[][8], int& score, int& moves){
     }else{
 
         string temp = "";
-<<<<<<< HEAD
 
             // ---------- READ GRID ----------
     int r = 0;
@@ -52,8 +51,7 @@ bool readSaveFile(string path, int store[][8], int& score, int& moves){
         r++;
 
         if (!getline(file, temp) || temp.empty()) return false;
-=======
-        
+
         for (int r = 0; r < 8; r++){
             int i = 0;
             getline(file, temp);
@@ -75,9 +73,7 @@ bool readSaveFile(string path, int store[][8], int& score, int& moves){
                 i++;
                 
             }
-           
->>>>>>> f378102 (add excption handling)
-
+ 
         }
 
         if (r != 8) return false; // not 8 rows
@@ -87,7 +83,6 @@ bool readSaveFile(string path, int store[][8], int& score, int& moves){
         if(temp.empty()) return false;
         
         int coloPos = temp.find(':');
-<<<<<<< HEAD
         if (coloPos == -1) return false; // 
         string scoreStr = temp.substr(coloPos + 1);
 
@@ -99,20 +94,19 @@ bool readSaveFile(string path, int store[][8], int& score, int& moves){
         }
 
 
-=======
+
         if(coloPos!=5)return false;
-        string scoreStr = temp.substr(coloPos + 1);
+        scoreStr = temp.substr(coloPos + 1);
         for(char ch : scoreStr){
             if(!isdigit(ch)) return false;
         }
->>>>>>> f378102 (add excption handling)
         int value = stoi(scoreStr);
         score = value;
 
         // reading moves
         getline(file, temp);
         int colPos = temp.find(':');
-<<<<<<< HEAD
+
         if (colPos == -1) return false;
         string movesStr = temp.substr(colPos + 1);
 
@@ -125,12 +119,10 @@ bool readSaveFile(string path, int store[][8], int& score, int& moves){
 
         }
 
-=======
         
         if(coloPos!=5)return false;
         string movesStr = temp.substr(colPos + 1);
         
->>>>>>> f378102 (add excption handling)
         value = stoi(movesStr);
 
         moves = value;        
