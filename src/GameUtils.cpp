@@ -188,45 +188,168 @@ void rowCandyHandler(int grid[][8], int coord[]){
     
 }
 
-void explodingCandyHandler(int grid[][8], int coord[]){
+void explodingCandyHandlerRows(int grid[][8], int range[], int row){
 
-    int left = coord[1] - 1; // x val
-    int right = coord[1] + 1; //x val
-    int top = coord[0] -1; // y val
-    int bottom = coord[0] + 1;
-    grid[coord[0]][coord[1]] = 8;
-    opaqueGrid[coord[0]][coord[1]] = false;
 
-    if(left >= 0){
-        grid[coord[0]][left] = 8;
-        opaqueGrid[coord[0]][left] = false;
+    for (int c = range[0]; c < range[1];c++){
 
-    }
+        int left = c - 1; // x val
+        int right = c + 1; //x val
+        int top = row -1; // y val
+        int bottom = row + 1;
 
-    if (right < COLS){
+        grid[row][c] = 8;
+        opaqueGrid[row][c] = false;
+
+        if(left >= 0){
+            grid[row][left] = 8;
+            opaqueGrid[row][left] = false;
+        }
+
+        if (right < COLS){
         
-        grid[coord[0]][right] = 8;
-        opaqueGrid[coord[0]][right] = false;
+            grid[row][right] = 8;
+            opaqueGrid[row][right] = false;
 
-    }
+        }
     
-    if (top >= 0){
-        grid[top][coord[1]] = 8;
-        opaqueGrid[top][coord[1]] = false;
+        if (top >= 0){
+            grid[top][c] = 8;
+            opaqueGrid[top][c] = false;
+
+        }
+
+
+        if(bottom < ROWS){
+
+            grid[bottom][c] = 8;
+            opaqueGrid[bottom][c] = false;
+
+        }
+
+         //diagonals
+        // topRIght
+        if(top > 0 && right < COLS){
+
+            grid[top][right] = 8;
+            opaqueGrid[top][right] = false;
+
+        }
+
+        // topLeft
+        if(top > 0 && left > 0){
+
+            grid[top][left] = 8;
+            opaqueGrid[top][left] = false;
+
+        }
+
+        // bottom left
+        if(bottom < ROWS && left > 0){
+
+            grid[bottom][left] = 8;
+            opaqueGrid[bottom][left] = false;
+
+        }
+
+        // bottom right
+        if(bottom < ROWS && right < COLS){
+
+            grid[bottom][right] = 8;
+            opaqueGrid[bottom][right] = false;
+
+        }
+
 
     }
 
-
-    if(bottom < ROWS){
-
-        grid[bottom][coord[1]] = 8;
-        opaqueGrid[bottom][coord[1]] = false;
-
-    }
+    
+    
 
     isAnimating = true;
     bombSound.play();
-    score+=250;
+    score+= 250 * (range[1] - range[0]);
+}
+
+void explodingCandyHandlerCols(int grid[][8], int range[], int col){
+
+
+    for (int r = range[0]; r < range[1];r++){
+
+        int left = col - 1; // x val
+        int right = col + 1; //x val
+        int top = r -1; // y val
+        int bottom = r + 1; 
+
+        grid[r][col] = 8;
+        opaqueGrid[r][col] = false;
+
+        if(left >= 0){
+            grid[r][left] = 8;
+            opaqueGrid[r][left] = false;
+        }
+
+        if (right < COLS){
+        
+            grid[r][right] = 8;
+            opaqueGrid[r][right] = false;
+
+        }
+    
+        if (top >= 0){
+            grid[top][col] = 8;
+            opaqueGrid[top][col] = false;
+
+        }
+        
+
+        if(bottom < ROWS){
+
+            grid[bottom][col] = 8;
+            opaqueGrid[bottom][col] = false;
+
+        }
+
+        //diagonals
+        // topRIght
+        if(top > 0 && right < COLS){
+
+            grid[top][right] = 8;
+            opaqueGrid[top][right] = false;
+
+        }
+
+        // topLeft
+        if(top > 0 && left > 0){
+
+            grid[top][left] = 8;
+            opaqueGrid[top][left] = false;
+
+        }
+
+        // bottom left
+        if(bottom < ROWS && left > 0){
+
+            grid[bottom][left] = 8;
+            opaqueGrid[bottom][left] = false;
+
+        }
+
+        // bottom right
+        if(bottom < ROWS && right < COLS){
+
+            grid[bottom][right] = 8;
+            opaqueGrid[bottom][right] = false;
+
+        }
+    }
+
+    
+    
+
+    isAnimating = true;
+    bombSound.play();
+    score+= 250 * (range[1] - range[0]);
 }
 
 // populates empty spaces
@@ -371,7 +494,7 @@ bool findAndReplaceMatches(int grid[][8]){
         int r = 0;
         while(r < ROWS){
             if(verticalCheck(r, c, range, grid)){
-
+                
                 replaceColumn(c, range, grid);
                 found = true;
                 r = range[1] + 1;
@@ -530,6 +653,7 @@ bool findAndReplaceMatchesAnimated(int grid[][8]){
         int c = 0;
         while(c < COLS){
             if(horizontalCheck(r, c, range, grid)){
+                if(grid[r][c] == 6) explodingCandyHandlerRows(grid, range, r); 
                 replaceRowAnimated(r, range, grid);
                 found = true;
                 c = range[1] + 1;
@@ -542,7 +666,7 @@ bool findAndReplaceMatchesAnimated(int grid[][8]){
         int r = 0;
         while(r < ROWS){
             if(verticalCheck(r, c, range, grid)){
-
+                if(grid[r][c] == 6) explodingCandyHandlerCols(grid, range, c); 
                 replaceColumnAnimated(c, range, grid);
                 found = true;
                 r = range[1] + 1;

@@ -194,20 +194,13 @@ static void inputHandleGrid(sf::Vector2f mousePos, sf::RenderWindow& window, int
                 // FIRST SELECTION
                 if (!selected) {
 
-                    if(grid[r][c] == 6){
-                        int coords[] = {r,c};
-                        explodingCandyHandler(grid, coords);
-                        moves--;
-                        return;
+                    // if(grid[r][c] == 6){
+                    //     int coords[] = {r,c};
+                    //     explodingCandyHandler(grid, coords);
+                    //     moves--;
+                    //     return;
                         
-                    }else if(grid[r][c] == 7){
-
-                        int coords[] = {r,c};
-                        rowCandyHandler(grid, coords);
-                        moves--;
-                        return;
-
-                    }
+                    // }
 
                     selected = true;
                     selectedCell[0] = r;
@@ -223,6 +216,17 @@ static void inputHandleGrid(sf::Vector2f mousePos, sf::RenderWindow& window, int
 
                 // swap attempt
                 swapCells(cell, selectedCell, grid);
+
+                createGridTexture(grid, gridRT, spriteGrid);
+                gridElement = sf::Sprite(gridRT.getTexture());
+
+                if(grid[selectedCell[0]][selectedCell[1]] == 7){
+                    rowCandyHandler(grid, selectedCell);
+                }else if(grid[cell[0]][cell[1]] == 7){
+                    rowCandyHandler(grid,cell);
+
+                }
+
                 cout << grid[r][c];
 
                 createGridTexture(grid, gridRT,spriteGrid);
@@ -240,6 +244,7 @@ static void inputHandleGrid(sf::Vector2f mousePos, sf::RenderWindow& window, int
                         
                         updateGrid(grid, ROWS);
 
+                        moves--;
 
                         
                     }
@@ -259,6 +264,7 @@ static void inputHandleGrid(sf::Vector2f mousePos, sf::RenderWindow& window, int
         }
     }
 }
+
 
 
 void tutorialScreenInputHandling(sf::RenderWindow& window, int& index){
