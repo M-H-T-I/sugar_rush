@@ -93,9 +93,9 @@ void SettingsScreenInputHandling(sf::RenderWindow& window, int& index){
         }else{
 
             music.setVolume(15.f);
-
         }
 
+        savemute(muteMusic);
 
     }else if(deleteSaveBtn.getGlobalBounds().contains(mousePos)){
 

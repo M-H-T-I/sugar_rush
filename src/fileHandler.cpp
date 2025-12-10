@@ -36,9 +36,11 @@ bool readSaveFile(string path, int store[][8], int& score, int& moves){
                 if(num<c){
                     store[r][c]=rand()%5+1;
                 }
+                    
                 else{
                     store[r][c] = (temp[i]) - '0';
                 }
+                num++;
                 i++;
                 
             }
@@ -120,4 +122,49 @@ bool writeSave(string path, int grid[][8], int score, int moves){
 bool deleteSave(const string path){
     std::cout<<"File deleted!";
     return filesystem::remove(path);
+}
+bool savemute(bool muteMusic){
+    ofstream mfile("src/save-data/mute.txt");
+
+    if(!(mfile.is_open())){
+    
+        cout << "Error: Could not open file for write." << endl; 
+        return false;
+
+    }else{
+
+        // first the grid
+        if(muteMusic){
+            mfile << "1" << endl;
+        }else{
+            mfile << "0" << endl;
+        }
+
+        mfile.close();
+
+        return true;
+    }
+}
+bool readmute(bool& muteMusic){
+
+    ifstream mfile("src/save-data/mute.txt");
+    
+
+    if (!mfile.is_open()){
+
+        cout << "Error: File did not open for read." << endl;
+        return false; 
+    }else{
+
+        string temp = "";
+        getline(mfile, temp);
+        if(temp=="1"){
+            muteMusic=true;
+        }else if(temp=="0"){
+            muteMusic=false;
+        }else{
+            return false;
+        }
+        return true;
+    }
 }

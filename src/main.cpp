@@ -16,6 +16,18 @@ int main(){
         
     }
 
+    if(!readmute(muteMusic)){
+
+        muteMusic = true;
+
+    }
+
+    if (muteMusic) {
+        music.setVolume(0);
+    }else {
+        music.setVolume(14.f);
+    }
+
     initRandom(); // initializing seed
 
     int index = 0;
