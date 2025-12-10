@@ -25,7 +25,8 @@ int main(){
     sf::RenderWindow window(sf::VideoMode({800, 600}), "Sugar Rush", sf::Style::Default);
 
     window.setFramerateLimit(80);
-    
+
+    //checking
 
     // run the program as long as the window is open
     while (window.isOpen())
