@@ -12,7 +12,7 @@ static bool openGuide = false;
 
 static bool lvlEnd;
 // imp data
-static int moves = 20, margin = 50; 
+static int  margin = 50; 
 
 // used to tell if mouse was clicked in the previous frame (input handling ma use hona)
 static bool mousePressedLastFrame = false;

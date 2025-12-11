@@ -8,7 +8,7 @@ sf::Music bombSound, music, popSound, MainPopSound;
 sf::Texture textureArray[9];
 
 string path = "src/save-data/lvl.txt";
-
+int moves = 20;
 bool muteMusic = false, muteSfx = false;
 
 // represent the states of game

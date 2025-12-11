@@ -118,13 +118,43 @@ void titleScreenInputHandling(sf::RenderWindow& window, int& index){
             index = 0;
         
         }else if(index == 2){
+
             initLevel1();
+
+            if (score >= requiredScore || moves <= -1){
+
+                index = 0;
+                showError = true;
+
+            }
+
         }else if(index == 3){
+
             initLevel2();
+
+            if (score >= requiredScore || moves <= -1){
+
+                index = 0;
+                showError = true;
+
+
+            }
+
         }else if(index == 4){
+
             initLevel3();
+
+            if (score >= requiredScore || moves <= -1){
+
+                index = 0;
+                showError = true;
+
+
+            }
+
         }else {
             index = 0;
+            showError = true;
         }
     }   
 

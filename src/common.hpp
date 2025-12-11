@@ -18,7 +18,7 @@ using namespace std;
 extern string states[7];
 
 extern int index;
-
+extern int moves;
 extern string path;
 
 extern sf::Font globalFont;

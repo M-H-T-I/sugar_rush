@@ -11,7 +11,7 @@ static int selectedCell[] = {-1, -1}; // unselected state is -1, -1
 
 static bool lvlEnd;
 // imp data
-static int moves = 20, margin = 50; 
+static int margin = 50; 
 
 // used to tell if mouse was clicked in the previous frame (input handling ma use hona)
 static bool mousePressedLastFrame = false;
@@ -41,9 +41,8 @@ bool initLevel1(){
 
     // assign its grid values
 
-    if(!readSaveFile(path, grid, score, moves, 1)){
+    if(!readSaveFile(path, grid, score, moves, 1) || !checkValidity()){
         initGrid(grid, 8);
-        
     }
 
 
