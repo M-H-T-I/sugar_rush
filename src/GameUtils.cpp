@@ -704,11 +704,12 @@ void createGridTexture(int grid[][8], sf::RenderTexture& gridTexture, sf::Sprite
 
                     textureNum = 1;
                     break;
+                
+                // we are making this the default state to ensure save file validation
+                // case 3:
 
-                case 3:
-
-                    textureNum = 2;
-                    break;
+                //     textureNum = 2;
+                //     break;
 
                 case 4:
 
@@ -733,6 +734,10 @@ void createGridTexture(int grid[][8], sf::RenderTexture& gridTexture, sf::Sprite
                 case 8:
 
                     textureNum = 8;
+                    break;
+                
+                default:
+                    textureNum = 2;
                     break;
 
                 };
